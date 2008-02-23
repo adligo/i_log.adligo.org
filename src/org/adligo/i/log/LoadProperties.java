@@ -22,7 +22,10 @@ public class LoadProperties {
 		InputStream in = null;
 		in = Class.class.getResourceAsStream(resourceName);
 		
-		
+		if (in == null) {
+			System.err.println("wasnt able to load resource " + resourceName + " for hashtable!");
+			return table;
+		}
         	
         //CLDC 2.0 doesn't have a StringBuilder,
     	// or properties, assue adligo_log.properties
