@@ -62,7 +62,7 @@ public class LogFactory {
 		}
 		
 		if (toRet == null) {
-			System.err.print("Wasn't able to locate a user configured " +
+			System.err.println("Wasn't able to locate a user configured " +
 					LOG_FACTORY_IMPL + " Falling back to default " +
 					AdligoLogFactory.class.getName());
 			toRet = new AdligoLogFactory();
