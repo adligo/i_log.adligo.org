@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="jar" name="i_log">
+	<property file="${user.home}/conf/adligo/user.properties"
+	          description="properties that tailor the build to your computer."/>
+	<property file="${user.home}/conf/adligo/adligo_lib.properties"/>
+	<property file="build.properties" />
+	
+	<import file="${user.home}/conf/adligo/build.xml"/>
+</project>
