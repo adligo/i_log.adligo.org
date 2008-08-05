@@ -16,7 +16,9 @@ import org.adligo.i.util.client.MapFactory;
  * @author scott
  *
  */
-public class AdligoLogFactory implements I_LogFactory {
+public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
+
+
 	private static I_Collection queueBeforePropLoad = CollectionFactory.create();
 	volatile private I_Map loggers = MapFactory.create();
 	
@@ -50,5 +52,7 @@ public class AdligoLogFactory implements I_LogFactory {
 
 	
 	
-
+	public I_LogFactory getLogFactory() {
+		return this;
+	}
 }

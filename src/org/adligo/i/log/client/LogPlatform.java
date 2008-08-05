@@ -26,6 +26,7 @@ public class LogPlatform implements I_Listener {
 
 	public static final void init(String logConfignName) {
 		PropertyFactory.get(logConfignName, new LogPlatform());
+		LogFactory.init();
 	}
 	
 	public static final void init() {

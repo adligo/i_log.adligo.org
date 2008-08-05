@@ -9,6 +9,7 @@ import org.adligo.i.util.client.PropertyFactory;
 
 public class LogFactory {
 	public static final String LOG_FACTORY_IMPL = "log_factory_class";
+	private static I_LogFactoryContainer container = new AdligoLogFactory();
 	
 	/**
 	 * NOTE in j2ME and J2SE code this should assign to a 
@@ -35,7 +36,7 @@ public class LogFactory {
 		return instance.getLog(clazz);
 	}
 	
-	protected static final I_LogFactory instance = createInstance();
+	protected static  I_LogFactory instance;
 	
 	/**
 	 * @return
@@ -45,13 +46,19 @@ public class LogFactory {
 	 * if you want to take a crack at it go ahead
 	 * 
 	 */
-	public static I_LogFactory createInstance() {
-		if (instance != null) {
-			return instance;
-		}
-		I_LogFactory toRet = new AdligoLogFactory();
-		
-		return toRet;
+	protected static synchronized void init() {
+		instance = container.getLogFactory();
+	}
+
+	/**
+	 * this could be use in GWT initaliztion
+	 * to log to Http -> Hibernate -> Oracle for 
+	 * example
+	 * 
+	 * @param container
+	 */
+	public static void setContainer(I_LogFactoryContainer container) {
+		LogFactory.container = container;
 	}
 	
 
