@@ -33,6 +33,13 @@ public class LogFactory {
 	 * @return
 	 */
 	public static Log getLog(Class clazz) {
+		if (instance == null) {
+			throw new NullPointerException(
+				"The org.adligo.i.log.LogPlatform has not been initalized " +
+				"please call init on it first!"	
+			);
+			
+		}
 		return instance.getLog(clazz);
 	}
 	

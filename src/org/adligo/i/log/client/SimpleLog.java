@@ -523,7 +523,27 @@ public class SimpleLog implements Log{
     }
 
 
-
+    public static final short getLevel(Log p) {
+    	if (p.isTraceEnabled()) {
+    		return LOG_LEVEL_TRACE;
+    	}
+        if (p.isDebugEnabled()) {
+        	return LOG_LEVEL_DEBUG;
+        }
+        if (p.isInfoEnabled()) {
+        	return LOG_LEVEL_INFO;
+        }
+        if (p.isWarnEnabled()) {
+        	return LOG_LEVEL_WARN;
+        }
+        if (p.isErrorEnabled()) {
+        	return LOG_LEVEL_ERROR;
+        }
+        if (p.isFatalEnabled()) {
+        	return LOG_LEVEL_FATAL;
+        }
+        return -1;
+    }
 
 }
 

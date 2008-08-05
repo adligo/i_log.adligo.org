@@ -41,11 +41,11 @@ public class LogPlatform implements I_Listener {
 		return props;
 	}
 	
-	public static boolean isLogEnabled() {
-		return true;
+	protected static boolean isLogEnabled() {
+		return false;
 	}
 	
-	public static void log(String p){
+	protected static void log(String p){
 		System.out.println(p);
 	}
 }
