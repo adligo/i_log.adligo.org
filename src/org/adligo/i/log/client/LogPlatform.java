@@ -14,30 +14,47 @@ import org.adligo.i.util.client.PropertyFactory;
  */
 public class LogPlatform implements I_Listener {
 	private static I_Map props = null;
+	private static I_Listener deferredLog = null;
 	
 	public void onEvent(Event p) {
+		if (LogPlatform.isLogEnabled()) {
+			LogPlatform.log("properties are loaded ");
+		}
+		
 		if (p.threwException()) {
 			p.getException().printStackTrace();
 		} else {
 			props = (I_Map) p.getValue();
 		}
-		
-	}
-
-	public static final void init(String logConfignName) {
-		PropertyFactory.get(logConfignName, new LogPlatform());
-		LogFactory.init();
-	}
-	
-	public static final void init() {
-		if (Platform.getPlatform() == Platform.GWT) {
-			init("adligo_log.properties");
-		} else {
-			init("/adligo_log.properties");
+		if (deferredLog != null) {
+			deferredLog.onEvent(p);
 		}
 	}
 
-	public static I_Map getProps() {
+	public static final void init(String logConfignName, I_Listener p_deferredLog) {
+		PropertyFactory.get(logConfignName, new LogPlatform());
+		LogFactory.init();
+		deferredLog = p_deferredLog;
+	}
+	
+	public static final void init(I_Listener deferredLog) {
+		String name =getFileName();
+		init(name, deferredLog);
+	}
+	public static final void init() {
+		String name =getFileName();
+		init(name, null);
+	}
+
+	private static String getFileName() {
+		if (Platform.getPlatform() == Platform.GWT) {
+			return "adligo_log.properties";
+		} else {
+			return "/adligo_log.properties";
+		}
+	}
+
+	public synchronized static I_Map getProps() {
 		return props;
 	}
 	

@@ -64,7 +64,7 @@ public class LogFactory {
 	 * 
 	 * @param container
 	 */
-	public static void setContainer(I_LogFactoryContainer container) {
+	public synchronized static void setContainer(I_LogFactoryContainer container) {
 		LogFactory.container = container;
 	}
 	

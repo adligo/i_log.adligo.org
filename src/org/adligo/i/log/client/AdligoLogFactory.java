@@ -19,23 +19,10 @@ import org.adligo.i.util.client.MapFactory;
 public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
 
 
-	private static I_Collection queueBeforePropLoad = CollectionFactory.create();
 	volatile private I_Map loggers = MapFactory.create();
 	
 	public Log getLog(Class clazz) {
 		//System.out.println("getting log for " + clazz);
-		if (LogPlatform.getProps() == null) {
-			synchronized (AdligoLogFactory.class) {
-				queueBeforePropLoad.add(clazz);
-			}
-			do {
-				for (int i = 0; i < 1000; i++) {
-					// do nothing
-				}
-				System.out.print("waiting for log config to load (adligo_log.properties)");
-			} while (LogPlatform.getProps() == null);
-		}
-		
 		Log toRet = (Log) loggers.get(clazz);
 		if (toRet == null) {
 			
@@ -48,7 +35,6 @@ public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
 				loggers.put(clazz, toRet);
 			}
 		}
-		queueBeforePropLoad.remove(clazz);
 		return toRet;
 	}
 
