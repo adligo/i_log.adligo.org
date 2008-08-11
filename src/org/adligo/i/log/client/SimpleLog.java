@@ -113,9 +113,7 @@ public class SimpleLog implements Log{
 
         // Set log level from properties
         String lvl = getStringProperty(props, logName);
-        if (LogPlatform.isLogEnabled()) {
-        	LogPlatform.log("SimpleLog " + name + " is set to " + lvl);
-        }
+        
         int i = String.valueOf(name).lastIndexOf('.');
         while(null == lvl && i > -1) {
             name = name.substring(0,i);
@@ -127,6 +125,9 @@ public class SimpleLog implements Log{
             lvl =  getStringProperty(props,systemPrefix + "defaultlog");
         }
 
+        if (LogPlatform.isLogEnabled()) {
+        	LogPlatform.log("SimpleLog " + name + " is set to " + lvl);
+        }
         if("all".equalsIgnoreCase(lvl)) {
             setLevel(SimpleLog.LOG_LEVEL_ALL);
         } else if("trace".equalsIgnoreCase(lvl)) {
@@ -250,9 +251,7 @@ public class SimpleLog implements Log{
      * @param logLevel is this level enabled?
      */
     protected boolean isLevelEnabled(int logLevel) {
-        // log level are numerically ordered so can use simple numeric
-        // comparison
-        return (logLevel >= currentLogLevel);
+        return (logLevel <= currentLogLevel);
     }
 
 
@@ -518,8 +517,7 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isWarnEnabled() {
-
-        return isLevelEnabled(SimpleLog.LOG_LEVEL_WARN);
+    	return isLevelEnabled(SimpleLog.LOG_LEVEL_WARN);
     }
 
 
