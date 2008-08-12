@@ -92,7 +92,7 @@ public class SimpleLog implements Log{
     /** The current log level */
     protected int currentLogLevel;
     /** The short name of this simple log instance */
-    private String shortLogName = null;
+    protected String shortLogName = null;
 
 
     // ------------------------------------------------------------ Constructor

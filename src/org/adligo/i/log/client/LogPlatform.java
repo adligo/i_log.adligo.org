@@ -29,7 +29,16 @@ public class LogPlatform implements I_Listener {
 	
 	private static I_Map props = null;
 	private static I_Listener deferredLog = null;
+	private static I_NetLogDispatcher dispatcher = null;
 	
+	protected static I_NetLogDispatcher getDispatcher() {
+		return dispatcher;
+	}
+
+	protected static void setDispatcher(I_NetLogDispatcher dispatcher) {
+		LogPlatform.dispatcher = dispatcher;
+	}
+
 	public void onEvent(Event p) {
 		if (LogPlatform.isLogEnabled()) {
 			LogPlatform.log("properties are loaded ");
