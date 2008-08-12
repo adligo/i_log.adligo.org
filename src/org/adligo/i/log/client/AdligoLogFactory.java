@@ -28,9 +28,6 @@ public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
 			
 			synchronized (this) {
 				String name = ClassUtils.getClassName(clazz);
-				if (LogPlatform.isLogEnabled()) {
-					LogPlatform.log("getting log for " + name);
-				}
 				toRet = new SimpleLog(name, LogPlatform.getProps());
 				loggers.put(clazz, toRet);
 			}

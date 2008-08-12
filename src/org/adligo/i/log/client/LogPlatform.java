@@ -33,14 +33,12 @@ public class LogPlatform implements I_Listener {
 	
 
 	public void onEvent(Event p) {
-		if (LogPlatform.isLogEnabled()) {
-			LogPlatform.log("properties are loaded ");
-		}
-		
 		if (p.threwException()) {
 			p.getException().printStackTrace();
 		} else {
-			props = (I_Map) p.getValue();
+			synchronized (LogPlatform.class) {
+				props = (I_Map) p.getValue();
+			}
 		}
 		if (deferredLog != null) {
 			deferredLog.onEvent(p);
@@ -73,14 +71,7 @@ public class LogPlatform implements I_Listener {
 	public synchronized static I_Map getProps() {
 		return props;
 	}
-	
-	protected static boolean isLogEnabled() {
-		return true;
-	}
-	
-	protected static void log(String p){
-		System.out.println(p);
-	}
+
 	
 	public static I_NetLogDispatcher getDispatcher() {
 		return dispatcher;
