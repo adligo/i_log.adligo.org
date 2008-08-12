@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="gwt-jar" name="i_log">
-	<property file="${user.home}/conf/adligo/user.properties"
-	          description="properties that tailor the build to your computer."/>
-	<property file="${user.home}/conf/adligo/org_gwt_lib.properties"/>
-	<property file="build.properties" />
-	
+<project basedir="." default="gwt-jar" name="gwt-i_log">
 	<import file="${user.home}/conf/adligo/gwt-build.xml"/>
 </project>

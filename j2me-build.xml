@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="jar" name="i_log">
+<project basedir="." default="jar" name="j2me-i_log">
     <import file="${user.home}/conf/adligo/j2me-build.xml"/>
 </project>
