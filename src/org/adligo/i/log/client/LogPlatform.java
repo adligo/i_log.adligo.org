@@ -13,6 +13,20 @@ import org.adligo.i.util.client.PropertyFactory;
  *
  */
 public class LogPlatform implements I_Listener {
+	/**
+	 * this is a key in adligo_log.properties that
+	 * is the url of a NetLog server
+	 * which is part of the 
+	 * 
+	 * http://www.adligo.com/Component_License_Agreement_1.1.pdf
+	 * 
+	 * You can use it to serve log messages from 
+	 * phones and GWT and J2SE if you want
+	 * and log messages to a browser window
+	 * 
+	 */
+	public static final String NET_LOG_URL = "net_log_url";
+	
 	private static I_Map props = null;
 	private static I_Listener deferredLog = null;
 	
