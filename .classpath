@@ -3,7 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="J2MELIB"/>
-	<classpathentry kind="var" path="GWT_HOME/gwt-user.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/i_util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
