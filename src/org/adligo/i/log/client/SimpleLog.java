@@ -543,7 +543,7 @@ public class SimpleLog implements Log{
         return -1;
     }
 
-    protected static boolean isLevelEnabled(int logLevel, int currentLevel) {
+    public static boolean isLevelEnabled(int logLevel, int currentLevel) {
         return (logLevel <= currentLevel);
     }
 }
