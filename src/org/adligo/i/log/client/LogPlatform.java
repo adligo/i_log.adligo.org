@@ -31,13 +31,6 @@ public class LogPlatform implements I_Listener {
 	private static I_Listener deferredLog = null;
 	private static I_NetLogDispatcher dispatcher = null;
 	
-	protected static I_NetLogDispatcher getDispatcher() {
-		return dispatcher;
-	}
-
-	protected static void setDispatcher(I_NetLogDispatcher dispatcher) {
-		LogPlatform.dispatcher = dispatcher;
-	}
 
 	public void onEvent(Event p) {
 		if (LogPlatform.isLogEnabled()) {
@@ -82,10 +75,18 @@ public class LogPlatform implements I_Listener {
 	}
 	
 	protected static boolean isLogEnabled() {
-		return false;
+		return true;
 	}
 	
 	protected static void log(String p){
 		System.out.println(p);
+	}
+	
+	public static I_NetLogDispatcher getDispatcher() {
+		return dispatcher;
+	}
+
+	public static void setDispatcher(I_NetLogDispatcher dispatcher) {
+		LogPlatform.dispatcher = dispatcher;
 	}
 }

@@ -8,7 +8,7 @@ public class NetLog extends SimpleLog implements Log {
 	private String baseUrl = null;
 	
 	public NetLog(Class clazz ) {
-		super(ClassUtils.getClassName(clazz), (I_Map) null);
+		super(ClassUtils.getClassName(clazz), LogPlatform.getProps());
 		logClass = logClass;
 		I_Map props = LogPlatform.getProps();
 		baseUrl = (String) props.get(LogPlatform.NET_LOG_URL);
@@ -39,6 +39,9 @@ public class NetLog extends SimpleLog implements Log {
         if(t != null)  {
             url.append(LogUrl.STACK, t.toString());
         }
-        LogPlatform.getDispatcher().dispatch(url.toString());
+        I_NetLogDispatcher dispatcher = LogPlatform.getDispatcher();
+        if (dispatcher != null) {
+        	dispatcher.dispatch(url.toString());
+        }
     }
 }

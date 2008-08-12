@@ -72,6 +72,9 @@ public class SimpleLog implements Log{
     // ------------------------------------------------------------ Initializer
 
     private static String getStringProperty(I_Map props, String name) {
+    	if (props == null) {
+    		return null;
+    	}
         return (String) props.get(name);
     }
 
@@ -90,7 +93,7 @@ public class SimpleLog implements Log{
     /** The name of this simple log instance */
     protected String logName = null;
     /** The current log level */
-    protected int currentLogLevel;
+    protected short currentLogLevel;
     /** The short name of this simple log instance */
     protected String shortLogName = null;
 
@@ -156,19 +159,16 @@ public class SimpleLog implements Log{
      *
      * @param currentLogLevel new logging level
      */
-    public void setLevel(int currentLogLevel) {
-
-        this.currentLogLevel = currentLogLevel;
-
+    public void setLevel(short currentLogLevel) {
+    	this.currentLogLevel = currentLogLevel;
     }
 
 
     /**
      * <p> Get logging level. </p>
      */
-    public int getLevel() {
-
-        return currentLogLevel;
+    public short getLevel() {
+    	return currentLogLevel;
     }
 
 
@@ -522,24 +522,29 @@ public class SimpleLog implements Log{
 
 
     public static final short getLevel(Log p) {
-    	if (p.isTraceEnabled()) {
-    		return LOG_LEVEL_TRACE;
-    	}
-        if (p.isDebugEnabled()) {
-        	return LOG_LEVEL_DEBUG;
-        }
-        if (p.isInfoEnabled()) {
-        	return LOG_LEVEL_INFO;
-        }
-        if (p.isWarnEnabled()) {
-        	return LOG_LEVEL_WARN;
+    	
+        if (p.isFatalEnabled()) {
+        	return LOG_LEVEL_FATAL;
         }
         if (p.isErrorEnabled()) {
         	return LOG_LEVEL_ERROR;
         }
-        if (p.isFatalEnabled()) {
-        	return LOG_LEVEL_FATAL;
+        if (p.isWarnEnabled()) {
+        	return LOG_LEVEL_WARN;
         }
+        if (p.isInfoEnabled()) {
+        	return LOG_LEVEL_INFO;
+        }
+        if (p.isDebugEnabled()) {
+        	return LOG_LEVEL_DEBUG;
+        }
+        if (p.isTraceEnabled()) {
+    		return LOG_LEVEL_TRACE;
+    	}
+        
+        
+        
+        
         return -1;
     }
 
