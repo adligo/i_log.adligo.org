@@ -11,7 +11,7 @@ public class NetLog extends SimpleLog implements Log {
 		super(ClassUtils.getClassName(clazz), LogPlatform.getProps());
 		logClass = logClass;
 		I_Map props = LogPlatform.getProps();
-		baseUrl = (String) props.get(LogPlatform.NET_LOG_URL);
+		baseUrl = (String) props.get(LogPlatform.NET_LOG_URL) + "base";
 	}
 	
     protected void log(int type, Object message, Throwable t) {
