@@ -1,5 +1,9 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.util.client.I_ImutableMap;
+import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.MapFactory;
+
 /**
  * this class is for sending a log message over http
  * for instance from the browser in GWT
@@ -37,8 +41,40 @@ public class LogUrl {
 	 */
 	public static final String NAME = "n";
 	
+	public static final I_ImutableMap URL_ESCAPE_CODES = getUrlEscapeCodes();
 	private boolean hasQ = false;
 	
+	private static I_ImutableMap getUrlEscapeCodes() {
+		I_Map toRet = MapFactory.create();
+		//copied from http://www.december.com/html/spec/esccodes.html
+		toRet.put(new Character(' '), new String("%20"));
+		toRet.put(new Character('<'), new String("%3C"));
+		toRet.put(new Character('>'), new String("%3E"));
+		toRet.put(new Character('#'), new String("%23"));
+		toRet.put(new Character('%'), new String("%25"));
+		toRet.put(new Character('{'), new String("%7B"));
+		toRet.put(new Character('}'), new String("%7D"));
+		toRet.put(new Character('|'), new String("%7C"));
+		toRet.put(new Character('\\'), new String("%5C"));
+		toRet.put(new Character('^'), new String("%5E"));
+		toRet.put(new Character('~'), new String("%7E"));
+		
+		toRet.put(new Character('['), new String("%5B"));
+		toRet.put(new Character(']'), new String("%5D"));
+		toRet.put(new Character('`'), new String("%60"));
+		toRet.put(new Character(';'), new String("%3B"));
+		toRet.put(new Character('/'), new String("%2F"));
+		toRet.put(new Character('?'), new String("%3F"));
+		toRet.put(new Character(':'), new String("%3A"));
+		toRet.put(new Character('@'), new String("%40"));
+		toRet.put(new Character('='), new String("%3D"));
+		toRet.put(new Character('&'), new String("%26"));
+		toRet.put(new Character('$'), new String("%24"));
+		
+		
+		
+		return MapFactory.create(toRet);
+	}
 	public LogUrl(String inital, boolean hasQ) {
 		sb.append(inital);
 		this.hasQ = hasQ;
@@ -62,12 +98,13 @@ public class LogUrl {
 	private void cleanAndAppend(String p) {
 		char [] chars = p.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
-			char c = chars[i];
-			if (c == ' ') {
-				sb.append("%20");
+			Character c = new Character(chars[i]);
+			String s = (String) URL_ESCAPE_CODES.get((c));
+			if (s != null) {
+				sb.append(s);
 			} else {
 				sb.append(c);
-			}
+			} 
 		}
 	}
 	

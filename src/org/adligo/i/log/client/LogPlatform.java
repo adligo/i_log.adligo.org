@@ -67,6 +67,7 @@ public class LogPlatform implements I_Listener {
 			return "/adligo_log.properties";
 		}
 	}
+	
 
 	public synchronized static I_Map getProps() {
 		return props;
