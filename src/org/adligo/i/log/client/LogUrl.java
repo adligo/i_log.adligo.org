@@ -1,6 +1,6 @@
 package org.adligo.i.log.client;
 
-import org.adligo.i.util.client.I_ImutableMap;
+import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.MapFactory;
 
@@ -41,10 +41,10 @@ public class LogUrl {
 	 */
 	public static final String NAME = "n";
 	
-	public static final I_ImutableMap URL_ESCAPE_CODES = getUrlEscapeCodes();
+	public static final I_ImmutableMap URL_ESCAPE_CODES = getUrlEscapeCodes();
 	private boolean hasQ = false;
 	
-	private static I_ImutableMap getUrlEscapeCodes() {
+	private static I_ImmutableMap getUrlEscapeCodes() {
 		I_Map toRet = MapFactory.create();
 		//copied from http://www.december.com/html/spec/esccodes.html
 		toRet.put(new Character(' '), new String("%20"));
