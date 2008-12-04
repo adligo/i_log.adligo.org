@@ -145,7 +145,7 @@ public class SimpleLog implements Log{
         } else if("off".equalsIgnoreCase(lvl)) {
             setLevel(SimpleLog.LOG_LEVEL_OFF);
         }
-
+        //System.out.println("Log " + name  + " is set to " + getLevel());
     }
 
 

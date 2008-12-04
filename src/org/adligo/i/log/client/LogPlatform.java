@@ -30,6 +30,7 @@ public class LogPlatform implements I_Listener {
 	private static I_Map props = null;
 	private static I_Listener deferredLog = null;
 	private static I_NetLogDispatcher dispatcher = null;
+	private static boolean isInit = false;
 	
 
 	public void onEvent(Event p) {
@@ -45,17 +46,20 @@ public class LogPlatform implements I_Listener {
 		}
 	}
 
-	public static final void init(String logConfignName, I_Listener p_deferredLog) {
-		PropertyFactory.get(logConfignName, new LogPlatform());
-		LogFactory.init();
-		deferredLog = p_deferredLog;
+	public synchronized static final void init(String logConfignName, I_Listener p_deferredLog) {
+		if (!isInit) {
+			PropertyFactory.get(logConfignName, new LogPlatform());
+			LogFactory.init();
+			deferredLog = p_deferredLog;
+			isInit = true;
+		}
 	}
 	
 	public static final void init(I_Listener deferredLog) {
 		String name =getFileName();
 		init(name, deferredLog);
 	}
-	public static final void init() {
+	public synchronized static final void init() {
 		String name =getFileName();
 		init(name, null);
 	}
