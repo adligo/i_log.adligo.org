@@ -14,5 +14,4 @@ public interface I_LogFactory {
 	 * @return
 	 */
 	public Log getLog(Class clazz);
-	public void reset();
 }

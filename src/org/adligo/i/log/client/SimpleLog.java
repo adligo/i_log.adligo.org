@@ -165,7 +165,7 @@ public class SimpleLog implements LogMutant {
      * @param message The message itself (typically a String)
      * @param t The exception whose stack trace should be logged
      */
-    protected void log(int type, Object message, Throwable t) {
+    public void log(int type, Object message, Throwable t) {
         // Use a string buffer for better performance
         StringBuffer buf = new StringBuffer();
 

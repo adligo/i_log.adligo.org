@@ -31,9 +31,10 @@ public class LogPlatform implements I_Listener {
 	private static String logConfigName = null;
 	
 	private static I_Map props = null;
-	private static I_Listener deferredLog = null;
 	private static I_NetLogDispatcher dispatcher = null;
 	private static boolean isInit = false;
+	
+	private static I_LogFactory customFactory = null;
 	
 
 	public void onEvent(Event p) {
@@ -43,44 +44,47 @@ public class LogPlatform implements I_Listener {
 			synchronized (LogPlatform.class) {
 				props = (I_Map) p.getValue();
 			}
-			if (isInit) {
-				LogFactory.instance.reset();
-			}
-		}
-		if (deferredLog != null) {
-			deferredLog.onEvent(p);
+			LogFactory.instance.resetLogLevels(props, customFactory);
 		}
 	}
 
 	/**
 	 * 
 	 * @param pLogConfignName
-	 * @param p_deferredLog may be null for j2se (GWT needs this since adligo_log.properties
-	 *    is loaded into the javascript runtime when it is recieved by the browser)
+	 * @param p the I_LogFactroy that you want to use to create Log instance
+	 *    in this new version all Log instances created by your custom factory
+	 *    will be called from ProxyLog->YourLog
+	 *    if you need more than one log message reciever you should have your
+	 *    custom I_LogFactory return a ProxyLog
+	 *    
+	 *    for instance if your code needed to call SimpleLog and NetLog 
+	 *    (like most GWT will so it shows up in the eclipse console and over the web)
+	 *    (I_Log's) ProxyLog-> (Your) ProxyLog
+	 *    				-> SimpleLog
+	 *    				-> NetLog
+	 *    
 	 */
-	public synchronized static final void init(String pLogConfignName, I_Listener p_deferredLog) {
+	public synchronized static final void init(String pLogConfignName, I_LogFactory p) {
 		if (!isInit) {
 			logConfigName = pLogConfignName;
 			PropertyFactory.get(logConfigName, instance);
-			LogFactory.init();
-			deferredLog = p_deferredLog;
+			customFactory = p;
 			isInit = true;
 		}
 	}
 
+	/**
+	 * 
+	 * @param pLogConfignName
+	 */
 	public static final void init(String pLogConfignName) {
-		init(pLogConfignName, null);
+		init(getFileName());
 	}
 	
-	public static final void init(I_Listener deferredLog) {
-		String name =getFileName();
-		init(name, deferredLog);
+	public static final void init() {
+		init(getFileName(), null);
 	}
-	public synchronized static final void init() {
-		String name =getFileName();
-		init(name, null);
-	}
-
+	
 	private static String getFileName() {
 		if (Platform.getPlatform() == Platform.GWT) {
 			return "adligo_log.properties";
@@ -108,7 +112,13 @@ public class LogPlatform implements I_Listener {
 	 * 
 	 * this rereads the property file and sets all the log levels to match with it
 	 */
-	public synchronized static final void reloadProperties() {
+	public synchronized static final void reloadConfig() {
+		PropertyFactory.get(logConfigName, instance);
+		//onEvent is called next through the callback
+	}
+	
+	public synchronized static final void loadConfig(String fileName) {
+		logConfigName = fileName;
 		PropertyFactory.get(logConfigName, instance);
 		//onEvent is called next through the callback
 	}

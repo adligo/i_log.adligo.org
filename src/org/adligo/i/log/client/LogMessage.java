@@ -1,8 +1,8 @@
 package org.adligo.i.log.client;
 
 
-public class DeferredLogMessage {
-	private Class logClass = null;
+public class LogMessage {
+	private Log log = null;
 	private Throwable throwable = null;
 	private Object message = null;
 	private short level = LogMutant.LOG_LEVEL_INFO;
@@ -22,22 +22,23 @@ public class DeferredLogMessage {
 	
 	
 	public void dispose() {
-		logClass = null;
+		log = null;
 		throwable = null;
 		message = null;
 		level = 0;
 	}
 	
-	public Class getLogClass() {
-		return logClass;
-	}
-	public void setLogClass(Class logClass) {
-		this.logClass = logClass;
-	}
 	public Throwable getThrowable() {
 		return throwable;
 	}
 	public void setThrowable(Throwable throwable) {
 		this.throwable = throwable;
+	}
+	
+	public Log getLog() {
+		return log;
+	}
+	public void setLog(Log log) {
+		this.log = log;
 	}
 }

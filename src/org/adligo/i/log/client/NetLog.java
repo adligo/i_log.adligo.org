@@ -14,7 +14,8 @@ public class NetLog extends SimpleLog implements Log {
 		baseUrl = (String) props.get(LogPlatform.NET_LOG_URL) + "base";
 	}
 	
-    protected void log(int type, Object message, Throwable t) {
+	
+    public void log(int type, Object message, Throwable t) {
     	LogUrl url = new LogUrl(baseUrl, false);
 
         url.append(LogUrl.LEVEL, type);

@@ -192,5 +192,13 @@ public interface Log {
      */
     public void fatal(Object message, Throwable t);
 
+    /**
+     * these are just implementaion detail objects
+     * @param type
+     * @param message
+     * @param t
+     */
+    public void log(int type, Object message, Throwable t);
+    public short getLevel();
 
 }

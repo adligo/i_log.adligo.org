@@ -1,74 +1,92 @@
 package org.adligo.i.log.client;
 
-
+import org.adligo.i.util.client.ArrayCollection;
+import org.adligo.i.util.client.ClassUtils;
+import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.Event;
+import org.adligo.i.util.client.I_Collection;
+import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
-import org.adligo.i.util.client.Platform;
-import org.adligo.i.util.client.PropertyFactory;
+import org.adligo.i.util.client.MapFactory;
 
-public class LogFactory {
-	public static final String LOG_FACTORY_IMPL = "log_factory_class";
-	private static I_LogFactoryContainer container = new AdligoLogFactory();
-	protected static  I_LogFactory instance;
+/**
+ * a ultra simple log factory for CLDC 2.0 usage
+ * in cell phones and GWT 
+ * exc 
+ * 
+ * @author scott
+ *
+ */
+public class LogFactory implements I_LogFactory, I_LogFactoryContainer {
+	protected static final LogFactory instance = new LogFactory();
+	private I_Collection preInitLoggers = new ArrayCollection();
+	volatile private I_Map loggers;
 	
-	/**
-	 * NOTE in j2ME and J2SE code this should assign to a 
-	 * static variable
-	 * ie.
-	 * private static final Log log = LogFactory.getLog(Class.class);
-	 * 
-	 * in GWT code this should assign to a member variable!
-	 * ie.
-	 * private final Log log = LogFactory.getLog(Class.class);
-	 * 
-	 * This is because the adligo_log.property file
-	 * is loaded after runtime in a Async call, not
-	 * as part of the classpath
-	 * 
-	 * Also it should have it's reference removed if you 
-	 * need to GarbageCollect the memory (RAM) consumed by the 
-	 * object
-	 * 
-	 * @param clazz
-	 * @return
-	 */
-	public static Log getLog(Class clazz) {
-		if (instance == null) {
-			throw new NullPointerException(
-				"The org.adligo.i.log.LogPlatform has not been initalized " +
-				"please call init on it first!"	
-			);
-			
+	private LogFactory() {}
+	
+	public synchronized Log getLog(Class clazz) {
+		//System.out.println("getting log for " + clazz);
+		
+		Log toRet;
+		if (loggers == null) {
+			// its ok if a log get added twice here,
+			// when initalization happens it will be normalized before
+			// being put in the lookup
+			toRet = new DeferredLog(clazz);
+			preInitLoggers.add(toRet);
+		} else {
+			toRet = (Log) loggers.get(clazz);
+			if (toRet == null) {
+				String name = ClassUtils.getClassName(clazz);
+				toRet = new SimpleLog(name, LogPlatform.getProps());
+				loggers.put(clazz, toRet);
+			}
 		}
-		return instance.getLog(clazz);
-	}
-	
-	
-	
-	/**
-	 * @return
-	 * GWT and J2ME bootstrapping and having optional instances
-	 * became to big of a pain
-	 * 
-	 * if you want to take a crack at it go ahead
-	 * 
-	 */
-	protected static synchronized void init() {
-		instance = container.getLogFactory();
+		return toRet;
 	}
 
-	/**
-	 * this could be use in GWT initaliztion
-	 * to log to Http -> Hibernate -> Oracle for 
-	 * example
-	 * 
-	 * @param container
-	 */
-	public synchronized static void setContainer(I_LogFactoryContainer container) {
-		LogFactory.container = container;
+	public synchronized void resetLogLevels(I_Map props, I_LogFactory p) {
+		boolean firstTime = false;
+		
+		if (loggers == null) {
+			firstTime = true;
+			loggers = MapFactory.create();
+			I_Iterator it = preInitLoggers.getIterator();
+			while (it.hasNext()) {
+				DeferredLog log = (DeferredLog) it.next();
+				Log delegate = null;
+				if (p != null) {
+					delegate = p.getLog(log.getLogClass());
+				} else {
+					Class clazz = log.getLogClass();
+					delegate = new SimpleLog(clazz.getName(), props);
+				}
+				log.addDelegate(delegate);
+				loggers.put(log.getLogClass(), log);
+			}
+		}
+		resetLevels(loggers, LogPlatform.getProps());
+		if (firstTime) {
+			I_Iterator it = DeferredLog.deferredMessages.getIterator();
+			while (it.hasNext()) {
+				LogMessage message = (LogMessage) it.next();
+				((DeferredLog) message.getLog()).consumeMessage(message);
+			}
+		}
 	}
 	
-
-
+	private static void resetLevels(I_Map loggers, I_Map props) {
+		I_Iterator it = loggers.getIterator();
+		while (it.hasNext()) {
+			Object key = it.next();
+			LogMutant log = (LogMutant) loggers.get(key);
+			
+			log.setLogLevel(props);
+		}
+	}	
+	
+	public I_LogFactory getLogFactory() {
+		return this;
+	}
 }

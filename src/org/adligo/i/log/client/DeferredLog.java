@@ -1,291 +1,122 @@
 package org.adligo.i.log.client;
 
-import org.adligo.i.util.client.ClassUtils;
-import org.adligo.i.util.client.CollectionFactory;
+import org.adligo.i.util.client.ArrayCollection;
 import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_Iterator;
-import org.adligo.i.util.client.I_Map;
 
-/**
- * this class tracks all logging
- * until it has 
- * received notification that the
- * log levels have been set,
- * at which point it logs everything in order 
- * and then defers new calls to the 
- * a SimpleLog obtained by LogFactory
- * 
- * @author scott
- *
- */
-public class DeferredLog  implements LogMutant {
-	private I_DeferredLogFactory factory = null;
-	private Log single_delegate = null;
-	private I_Collection delegates = null;
-	private Class logClass;
-	private short level = LogMutant.LOG_LEVEL_INFO;
+public class DeferredLog extends ProxyLog {
+	protected static I_Collection deferredMessages = new ArrayCollection();
 	
-	public DeferredLog(Class c, I_DeferredLogFactory p) {
-		 logClass = c;
-		 factory = p;
+	public DeferredLog(Class clazz) {
+		super(clazz);
 	}
 	
-	public synchronized void addDelegate(Log p) {
-		if (p != null) {
-			if (single_delegate == null) {
-				single_delegate = p;
-			} else {
-				if (delegates == null) {
-					delegates = CollectionFactory.create();
-					delegates.add(single_delegate);
-				}
-				delegates.add(p);
-			}
-		}
-	}
-	
-	public I_Iterator getDelegates() {
-		return delegates.getIterator();
-	}
-
 	public void debug(Object message, Throwable t) {
-		if (isDebugEnabled()) {
-			if (delegates == null) {
-			
-			} else if (delegates != null) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.debug(message, t);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_DEBUG);
-				m.setThrowable(t);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_DEBUG, message, t));
+		} else {
+			super.debug(message, t);
 		}
 	}
 
 	public void debug(Object message) {
-		if (isDebugEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.debug(message);
-				}
-			} else {
-				DeferredLogMessage m = createMessage(message, LogMutant.LOG_LEVEL_DEBUG);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_DEBUG, message, null));
+		} else {
+			super.debug(message);
 		}
 	}
 
-	private DeferredLogMessage createMessage(Object message, short lvl) {
-		DeferredLogMessage m = new DeferredLogMessage();
-		m.setMessage(message);
-		m.setLogClass(logClass);
-		m.setLevel(lvl);
-		return m;
-	}
-
 	public void error(Object message, Throwable t) {
-		if (isErrorEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.error(message, t);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_ERROR);
-				m.setThrowable(t);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_ERROR, message, t));
+		} else {
+			super.error(message, t);
 		}
 	}
 
 	public void error(Object message) {
-		if (isErrorEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.error(message);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_ERROR);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_ERROR, message, null));
+		} else {
+			super.error(message);
 		}
 	}
 
 	public void fatal(Object message, Throwable t) {
-		if (isFatalEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.fatal(message, t);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_FATAL);
-				m.setThrowable(t);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_FATAL, message, t));
+		} else {
+			super.fatal(message, t);
 		}
 	}
 
 	public void fatal(Object message) {
-		if (isFatalEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.fatal(message);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_FATAL);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_FATAL, message, null));
+		} else {
+			super.fatal(message);
 		}
 	}
 
 	public void info(Object message, Throwable t) {
-		if (isInfoEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.info(message, t);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_INFO);
-				m.setThrowable(t);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_INFO, message, t));
+		} else {
+			super.info(message, t);
 		}
 	}
 
 	public void info(Object message) {
-		if (isInfoEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.info(message);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_INFO);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_INFO, message, null));
+		} else {
+			super.info(message);
 		}
-	}
-
-	public void setLevel(short p) {
-		this.level = p;
-	}
-	
-	public void setLogLevel(I_Map props) {
-		I_Iterator it = delegates.getIterator();
-		while (it.hasNext()) {
-			LogMutant delegate = (LogMutant) it.next();
-			delegate.setLogLevel(props);
-		}
-	}
-	
-	public boolean isDebugEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_DEBUG, this.level);
-	}
-
-	public boolean isErrorEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_ERROR, this.level);
-	}
-
-	public boolean isFatalEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_FATAL, this.level);
-	}
-
-	public boolean isInfoEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_INFO, this.level);
-	}
-
-	public boolean isTraceEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_TRACE, this.level);
-	}
-
-	public boolean isWarnEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_WARN, this.level);
 	}
 
 	public void trace(Object message, Throwable t) {
-		if (isTraceEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.trace(message, t);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_TRACE);
-				m.setThrowable(t);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_TRACE, message, t));
+		} else {
+			super.trace(message, t);
 		}
 	}
 
 	public void trace(Object message) {
-		if (isTraceEnabled()) {
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.trace(message);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_TRACE);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_TRACE, message, null));
+		} else {
+			super.trace(message);
 		}
 	}
 
 	public void warn(Object message, Throwable t) {
-		if (isWarnEnabled()) {
-			
-			if (delegates.size() != 0) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.warn(message, t);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_WARN);
-				m.setThrowable(t);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_WARN, message, t));
+		} else {
+			super.warn(message, t);
 		}
 	}
 
 	public void warn(Object message) {
-		if (isWarnEnabled()) {
-			if (delegates.size() != 0) {
-				
-				
-				I_Iterator it = delegates.getIterator();
-				
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.warn(message);
-				}
-			} else {
-				DeferredLogMessage m = this.createMessage(message, LogMutant.LOG_LEVEL_WARN);
-				factory.addMessage(m);
-			}
+		if (super.single_delegate == null) {
+			deferredMessages.add(createMessage(LogMutant.LOG_LEVEL_WARN, message, null));
+		} else {
+			super.warn(message);
 		}
 	}
 
-	public Class getLogClass() {
-		return logClass;
+	private LogMessage createMessage(short level, Object message, Throwable t) {
+		LogMessage toRet = new LogMessage();
+		toRet.setLevel(level);
+		toRet.setMessage(message);
+		toRet.setThrowable(t);
+		toRet.setLog(this);
+		return toRet;
 	}
-
+	
+	protected void consumeMessage(LogMessage p) {
+		super.log(p.getLevel(), p.getMessage(), p.getThrowable());
+	}
+	
 }
