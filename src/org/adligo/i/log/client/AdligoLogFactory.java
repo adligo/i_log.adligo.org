@@ -37,6 +37,10 @@ public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
 	}
 
 	public void reset() {
+		reset(loggers);
+	}
+
+	public static void reset(I_Map loggers) {
 		I_Iterator it = loggers.getIterator();
 		while (it.hasNext()) {
 			Object key = it.next();
@@ -45,6 +49,8 @@ public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
 			log.setLogLevel(LogPlatform.getProps());
 		}
 	}
+	
+	
 	
 	public I_LogFactory getLogFactory() {
 		return this;
