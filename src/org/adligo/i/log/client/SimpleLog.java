@@ -26,7 +26,7 @@ import org.adligo.i.util.client.I_Map;
  * A copy of the apache commons SimpleLog class, with 
  * date support removed, for CLDC 2.0
  */
-public class SimpleLog implements Log{
+public class SimpleLog implements LogMutant {
 	
     // ------------------------------------------------------- Class Attributes
 
@@ -49,27 +49,6 @@ public class SimpleLog implements Log{
 
     // ---------------------------------------------------- Log Level Constants
 
-
-    /** "Trace" level logging. */
-    public static final short LOG_LEVEL_TRACE  = 1;
-    /** "Debug" level logging. */
-    public static final short LOG_LEVEL_DEBUG  = 2;
-    /** "Info" level logging. */
-    public static final short LOG_LEVEL_INFO   = 3;
-    /** "Warn" level logging. */
-    public static final short LOG_LEVEL_WARN   = 4;
-    /** "Error" level logging. */
-    public static final short LOG_LEVEL_ERROR  = 5;
-    /** "Fatal" level logging. */
-    public static final short LOG_LEVEL_FATAL  = 6;
-
-    /** Enable all logging levels */
-    public static final short LOG_LEVEL_ALL    = (LOG_LEVEL_TRACE - 1);
-
-    /** Enable no logging levels */
-    public static final short LOG_LEVEL_OFF    = (LOG_LEVEL_FATAL + 1);
-
-    // ------------------------------------------------------------ Initializer
 
     private static String getStringProperty(I_Map props, String name) {
     	if (props == null) {
@@ -112,12 +91,12 @@ public class SimpleLog implements Log{
         // Set initial log level
         // Used to be: set default log level to ERROR
         // IMHO it should be lower, but at least info ( costin ).
-        setLevel(SimpleLog.LOG_LEVEL_INFO);
+        setLevel(LogMutant.LOG_LEVEL_INFO);
 
         setLogLevel(props);
     }
 
-	protected void setLogLevel(I_Map props) {
+	public void setLogLevel(I_Map props) {
 		// Set log level from properties
         String lvl = getStringProperty(props, logName);
         
@@ -134,21 +113,21 @@ public class SimpleLog implements Log{
         }
 
         if("all".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_ALL);
+            setLevel(LogMutant.LOG_LEVEL_ALL);
         } else if("trace".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_TRACE);
+            setLevel(LogMutant.LOG_LEVEL_TRACE);
         } else if("debug".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_DEBUG);
+            setLevel(LogMutant.LOG_LEVEL_DEBUG);
         } else if("info".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_INFO);
+            setLevel(LogMutant.LOG_LEVEL_INFO);
         } else if("warn".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_WARN);
+            setLevel(LogMutant.LOG_LEVEL_WARN);
         } else if("error".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_ERROR);
+            setLevel(LogMutant.LOG_LEVEL_ERROR);
         } else if("fatal".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_FATAL);
+            setLevel(LogMutant.LOG_LEVEL_FATAL);
         } else if("off".equalsIgnoreCase(lvl)) {
-            setLevel(SimpleLog.LOG_LEVEL_OFF);
+            setLevel(LogMutant.LOG_LEVEL_OFF);
         }
         //System.out.println("Log " + name  + " is set to " + getLevel());
 	}
@@ -193,12 +172,12 @@ public class SimpleLog implements Log{
 
         // Append a readable representation of the log level
         switch(type) {
-            case SimpleLog.LOG_LEVEL_TRACE: buf.append("[TRACE] "); break;
-            case SimpleLog.LOG_LEVEL_DEBUG: buf.append("[DEBUG] "); break;
-            case SimpleLog.LOG_LEVEL_INFO:  buf.append("[INFO] ");  break;
-            case SimpleLog.LOG_LEVEL_WARN:  buf.append("[WARN] ");  break;
-            case SimpleLog.LOG_LEVEL_ERROR: buf.append("[ERROR] "); break;
-            case SimpleLog.LOG_LEVEL_FATAL: buf.append("[FATAL] "); break;
+            case LogMutant.LOG_LEVEL_TRACE: buf.append("[TRACE] "); break;
+            case LogMutant.LOG_LEVEL_DEBUG: buf.append("[DEBUG] "); break;
+            case LogMutant.LOG_LEVEL_INFO:  buf.append("[INFO] ");  break;
+            case LogMutant.LOG_LEVEL_WARN:  buf.append("[WARN] ");  break;
+            case LogMutant.LOG_LEVEL_ERROR: buf.append("[ERROR] "); break;
+            case LogMutant.LOG_LEVEL_FATAL: buf.append("[FATAL] "); break;
         }
 
         // Append the name of the log instance if so configured
@@ -268,8 +247,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#debug(Object)
      */
     public final void debug(Object message) {
-    	if (this.isLevelEnabled(LOG_LEVEL_DEBUG)) {
-    		log(SimpleLog.LOG_LEVEL_DEBUG, message, null);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_DEBUG)) {
+    		log(LogMutant.LOG_LEVEL_DEBUG, message, null);
     	}
     }
 
@@ -283,8 +262,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#debug(Object, Throwable)
      */
     public final void debug(Object message, Throwable t) {
-    	if (this.isLevelEnabled(LOG_LEVEL_DEBUG)) {
-    		log(SimpleLog.LOG_LEVEL_DEBUG, message, t);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_DEBUG)) {
+    		log(LogMutant.LOG_LEVEL_DEBUG, message, t);
     	}
     }
 
@@ -297,8 +276,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#trace(Object)
      */
     public final void trace(Object message) {
-    	if (this.isLevelEnabled(LOG_LEVEL_TRACE)) {
-    		log(SimpleLog.LOG_LEVEL_TRACE, message, null);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_TRACE)) {
+    		log(LogMutant.LOG_LEVEL_TRACE, message, null);
     	}
     }
 
@@ -312,8 +291,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#trace(Object, Throwable)
      */
     public final void trace(Object message, Throwable t) {
-    	if (this.isLevelEnabled(LOG_LEVEL_TRACE)) {
-    		log(SimpleLog.LOG_LEVEL_TRACE, message, t);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_TRACE)) {
+    		log(LogMutant.LOG_LEVEL_TRACE, message, t);
     	}
     }
 
@@ -326,8 +305,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#info(Object)
      */
     public final void info(Object message) {
-    	if (this.isLevelEnabled(LOG_LEVEL_INFO)) {
-    		log(SimpleLog.LOG_LEVEL_INFO,message,null);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_INFO)) {
+    		log(LogMutant.LOG_LEVEL_INFO,message,null);
     	}
     }
 
@@ -341,8 +320,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#info(Object, Throwable)
      */
     public final void info(Object message, Throwable t) {
-    	if (this.isLevelEnabled(LOG_LEVEL_INFO)) {
-    		log(SimpleLog.LOG_LEVEL_INFO, message, t);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_INFO)) {
+    		log(LogMutant.LOG_LEVEL_INFO, message, t);
     	}
     }
 
@@ -355,8 +334,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#warn(Object)
      */
     public final void warn(Object message) {
-    	if (this.isLevelEnabled(LOG_LEVEL_WARN)) {
-    		log(SimpleLog.LOG_LEVEL_WARN, message, null);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_WARN)) {
+    		log(LogMutant.LOG_LEVEL_WARN, message, null);
     	}
     }
 
@@ -370,8 +349,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#warn(Object, Throwable)
      */
     public final void warn(Object message, Throwable t) {
-    	if (this.isLevelEnabled(LOG_LEVEL_WARN)) {
-    		log(SimpleLog.LOG_LEVEL_WARN, message, t);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_WARN)) {
+    		log(LogMutant.LOG_LEVEL_WARN, message, t);
     	}
     }
 
@@ -384,8 +363,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#error(Object)
      */
     public final void error(Object message) {
-    	if (this.isLevelEnabled(LOG_LEVEL_ERROR)) {
-    		log(SimpleLog.LOG_LEVEL_ERROR, message, null);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_ERROR)) {
+    		log(LogMutant.LOG_LEVEL_ERROR, message, null);
     	}
     }
 
@@ -399,8 +378,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#error(Object, Throwable)
      */
     public final void error(Object message, Throwable t) {
-    	if (this.isLevelEnabled(LOG_LEVEL_ERROR)) {
-    		log(SimpleLog.LOG_LEVEL_ERROR, message, t);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_ERROR)) {
+    		log(LogMutant.LOG_LEVEL_ERROR, message, t);
     	}
     }
 
@@ -413,8 +392,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#fatal(Object)
      */
     public final void fatal(Object message) {
-    	if (this.isLevelEnabled(LOG_LEVEL_FATAL)) {
-    		log(SimpleLog.LOG_LEVEL_FATAL, message, null);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_FATAL)) {
+    		log(LogMutant.LOG_LEVEL_FATAL, message, null);
     	}
     }
 
@@ -428,8 +407,8 @@ public class SimpleLog implements Log{
      * @see org.apache.commons.logging.Log#fatal(Object, Throwable)
      */
     public final void fatal(Object message, Throwable t) {
-    	if (this.isLevelEnabled(LOG_LEVEL_FATAL)) {
-    		log(SimpleLog.LOG_LEVEL_FATAL, message, t);
+    	if (this.isLevelEnabled(LogMutant.LOG_LEVEL_FATAL)) {
+    		log(LogMutant.LOG_LEVEL_FATAL, message, t);
     	}
     }
 
@@ -442,7 +421,7 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isDebugEnabled() {
-    	return isLevelEnabled(SimpleLog.LOG_LEVEL_DEBUG);
+    	return isLevelEnabled(LogMutant.LOG_LEVEL_DEBUG);
     }
 
 
@@ -454,7 +433,7 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isErrorEnabled() {
-    	return isLevelEnabled(SimpleLog.LOG_LEVEL_ERROR);
+    	return isLevelEnabled(LogMutant.LOG_LEVEL_ERROR);
     }
 
 
@@ -466,7 +445,7 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isFatalEnabled() {
-    	return isLevelEnabled(SimpleLog.LOG_LEVEL_FATAL);
+    	return isLevelEnabled(LogMutant.LOG_LEVEL_FATAL);
     }
 
 
@@ -478,7 +457,7 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isInfoEnabled() {
-    	return isLevelEnabled(SimpleLog.LOG_LEVEL_INFO);
+    	return isLevelEnabled(LogMutant.LOG_LEVEL_INFO);
     }
 
 
@@ -490,7 +469,7 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isTraceEnabled() {
-    	return isLevelEnabled(SimpleLog.LOG_LEVEL_TRACE);
+    	return isLevelEnabled(LogMutant.LOG_LEVEL_TRACE);
     }
 
 
@@ -502,29 +481,29 @@ public class SimpleLog implements Log{
      * logger. </p>
      */
     public final boolean isWarnEnabled() {
-    	return isLevelEnabled(SimpleLog.LOG_LEVEL_WARN);
+    	return isLevelEnabled(LogMutant.LOG_LEVEL_WARN);
     }
 
 
     public static final short getLevel(Log p) {
     	
         if (p.isFatalEnabled()) {
-        	return LOG_LEVEL_FATAL;
+        	return LogMutant.LOG_LEVEL_FATAL;
         }
         if (p.isErrorEnabled()) {
-        	return LOG_LEVEL_ERROR;
+        	return LogMutant.LOG_LEVEL_ERROR;
         }
         if (p.isWarnEnabled()) {
-        	return LOG_LEVEL_WARN;
+        	return LogMutant.LOG_LEVEL_WARN;
         }
         if (p.isInfoEnabled()) {
-        	return LOG_LEVEL_INFO;
+        	return LogMutant.LOG_LEVEL_INFO;
         }
         if (p.isDebugEnabled()) {
-        	return LOG_LEVEL_DEBUG;
+        	return LogMutant.LOG_LEVEL_DEBUG;
         }
         if (p.isTraceEnabled()) {
-    		return LOG_LEVEL_TRACE;
+    		return LogMutant.LOG_LEVEL_TRACE;
     	}
         
         

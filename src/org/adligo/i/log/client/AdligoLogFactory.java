@@ -44,7 +44,7 @@ public class AdligoLogFactory implements I_LogFactory, I_LogFactoryContainer {
 		I_Iterator it = loggers.getIterator();
 		while (it.hasNext()) {
 			Object key = it.next();
-			SimpleLog log = (SimpleLog) loggers.get(key);
+			LogMutant log = (LogMutant) loggers.get(key);
 			
 			log.setLogLevel(LogPlatform.getProps());
 		}
