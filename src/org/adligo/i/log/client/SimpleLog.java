@@ -114,14 +114,19 @@ public class SimpleLog implements Log{
         // IMHO it should be lower, but at least info ( costin ).
         setLevel(SimpleLog.LOG_LEVEL_INFO);
 
-        // Set log level from properties
+        setLogLevel(props);
+    }
+
+	protected void setLogLevel(I_Map props) {
+		// Set log level from properties
         String lvl = getStringProperty(props, logName);
         
-        int i = String.valueOf(name).lastIndexOf('.');
+        String tempName = logName;
+        int i = String.valueOf(tempName).lastIndexOf('.');
         while(null == lvl && i > -1) {
-            name = name.substring(0,i);
-            lvl = getStringProperty(props,systemPrefix + "log." + name);
-            i = String.valueOf(name).lastIndexOf('.');
+        	tempName = tempName.substring(0,i);
+            lvl = getStringProperty(props,systemPrefix + "log." + tempName);
+            i = String.valueOf(tempName).lastIndexOf('.');
         }
 
         if(null == lvl) {
@@ -146,7 +151,7 @@ public class SimpleLog implements Log{
             setLevel(SimpleLog.LOG_LEVEL_OFF);
         }
         //System.out.println("Log " + name  + " is set to " + getLevel());
-    }
+	}
 
 
     // -------------------------------------------------------- Properties

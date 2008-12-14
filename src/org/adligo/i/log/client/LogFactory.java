@@ -10,6 +10,7 @@ import org.adligo.i.util.client.PropertyFactory;
 public class LogFactory {
 	public static final String LOG_FACTORY_IMPL = "log_factory_class";
 	private static I_LogFactoryContainer container = new AdligoLogFactory();
+	protected static  I_LogFactory instance;
 	
 	/**
 	 * NOTE in j2ME and J2SE code this should assign to a 
@@ -43,7 +44,7 @@ public class LogFactory {
 		return instance.getLog(clazz);
 	}
 	
-	protected static  I_LogFactory instance;
+	
 	
 	/**
 	 * @return

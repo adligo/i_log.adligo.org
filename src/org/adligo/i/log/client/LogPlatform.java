@@ -27,6 +27,9 @@ public class LogPlatform implements I_Listener {
 	 */
 	public static final String NET_LOG_URL = "net_log_url";
 	
+	private static final LogPlatform instance = new LogPlatform();
+	private static String logConfigName = null;
+	
 	private static I_Map props = null;
 	private static I_Listener deferredLog = null;
 	private static I_NetLogDispatcher dispatcher = null;
@@ -40,19 +43,33 @@ public class LogPlatform implements I_Listener {
 			synchronized (LogPlatform.class) {
 				props = (I_Map) p.getValue();
 			}
+			if (isInit) {
+				LogFactory.instance.reset();
+			}
 		}
 		if (deferredLog != null) {
 			deferredLog.onEvent(p);
 		}
 	}
 
-	public synchronized static final void init(String logConfignName, I_Listener p_deferredLog) {
+	/**
+	 * 
+	 * @param pLogConfignName
+	 * @param p_deferredLog may be null for j2se (GWT needs this since adligo_log.properties
+	 *    is loaded into the javascript runtime when it is recieved by the browser)
+	 */
+	public synchronized static final void init(String pLogConfignName, I_Listener p_deferredLog) {
 		if (!isInit) {
-			PropertyFactory.get(logConfignName, new LogPlatform());
+			logConfigName = pLogConfignName;
+			PropertyFactory.get(logConfigName, instance);
 			LogFactory.init();
 			deferredLog = p_deferredLog;
 			isInit = true;
 		}
+	}
+
+	public static final void init(String pLogConfignName) {
+		init(pLogConfignName, null);
 	}
 	
 	public static final void init(I_Listener deferredLog) {
@@ -84,5 +101,15 @@ public class LogPlatform implements I_Listener {
 
 	public static void setDispatcher(I_NetLogDispatcher dispatcher) {
 		LogPlatform.dispatcher = dispatcher;
+	}
+	
+	/**
+	 * Only call after init has been called!
+	 * 
+	 * this rereads the property file and sets all the log levels to match with it
+	 */
+	public synchronized static final void reloadProperties() {
+		PropertyFactory.get(logConfigName, instance);
+		//onEvent is called next through the callback
 	}
 }
