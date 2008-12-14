@@ -7,37 +7,37 @@ public class DeferredLogMessage {
 	private Object message = null;
 	private short level = LogMutant.LOG_LEVEL_INFO;
 	
-	protected short getLevel() {
+	public short getLevel() {
 		return level;
 	}
-	protected void setLevel(short level) {
+	public void setLevel(short level) {
 		this.level = level;
 	}
-	protected Object getMessage() {
+	public Object getMessage() {
 		return message;
 	}
-	protected void setMessage(Object message) {
+	public void setMessage(Object message) {
 		this.message = message;
 	}
 	
 	
-	protected void dispose() {
+	public void dispose() {
 		logClass = null;
 		throwable = null;
 		message = null;
 		level = 0;
 	}
 	
-	protected Class getLogClass() {
+	public Class getLogClass() {
 		return logClass;
 	}
-	protected void setLogClass(Class logClass) {
+	public void setLogClass(Class logClass) {
 		this.logClass = logClass;
 	}
-	protected Throwable getThrowable() {
+	public Throwable getThrowable() {
 		return throwable;
 	}
-	protected void setThrowable(Throwable throwable) {
+	public void setThrowable(Throwable throwable) {
 		this.throwable = throwable;
 	}
 }
