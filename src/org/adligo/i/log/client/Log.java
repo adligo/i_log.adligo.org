@@ -1,5 +1,7 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.util.client.I_Map;
+
 
 /**
  * this is a direct copy of the apache commons logging interface
@@ -194,11 +196,21 @@ public interface Log {
 
     /**
      * these are just implementaion detail objects
+     * these are needed for event base initalization
+     * (instead of static block initalization, which has issues on many platforms including;
+     * GWT doesn't even have static blocks!
+     * J2EE static initalization means you can't pull settings from the Servlet context!
+     * J2SE its fairly hard if not impossible to get static initalization to work properly
+     *    when its not in the LogFactory, ug this was a pain.
+     *    
+     * )
+     * 
      * @param type
      * @param message
      * @param t
      */
     public void log(int type, Object message, Throwable t);
     public short getLevel();
+    public void setLogLevel(I_Map props);
 
 }

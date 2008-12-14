@@ -163,10 +163,14 @@ public class ProxyLog  implements LogMutant {
 	}
 	
 	public void setLogLevel(I_Map props) {
-		I_Iterator it = delegates.getIterator();
-		while (it.hasNext()) {
-			LogMutant delegate = (LogMutant) it.next();
-			delegate.setLogLevel(props);
+		if (delegates == null && single_delegate != null) {
+			single_delegate.setLogLevel(props);
+		} else {
+			I_Iterator it = delegates.getIterator();
+			while (it.hasNext()) {
+				LogMutant delegate = (LogMutant) it.next();
+				delegate.setLogLevel(props);
+			}
 		}
 	}
 	
