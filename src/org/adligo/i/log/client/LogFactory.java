@@ -18,7 +18,7 @@ import org.adligo.i.util.client.MapFactory;
  * @author scott
  *
  */
-public class LogFactory implements I_LogFactoryContainer {
+public class LogFactory {
 	protected static final LogFactory instance = new LogFactory();
 	private I_Collection preInitLoggers = new ArrayCollection();
 	volatile private I_Map loggers;
@@ -90,7 +90,4 @@ public class LogFactory implements I_LogFactoryContainer {
 		}
 	}	
 	
-	public I_LogFactory getLogFactory() {
-		return this;
-	}
 }
