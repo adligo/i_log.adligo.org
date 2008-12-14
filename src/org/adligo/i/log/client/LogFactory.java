@@ -18,14 +18,18 @@ import org.adligo.i.util.client.MapFactory;
  * @author scott
  *
  */
-public class LogFactory implements I_LogFactory, I_LogFactoryContainer {
+public class LogFactory implements I_LogFactoryContainer {
 	protected static final LogFactory instance = new LogFactory();
 	private I_Collection preInitLoggers = new ArrayCollection();
 	volatile private I_Map loggers;
 	
 	private LogFactory() {}
 	
-	public synchronized Log getLog(Class clazz) {
+	public static Log getLog(Class clazz) {
+		return instance.getLogInternal(clazz);
+	}
+	
+	public synchronized Log getLogInternal(Class clazz) {
 		//System.out.println("getting log for " + clazz);
 		
 		Log toRet;
