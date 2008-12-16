@@ -22,6 +22,7 @@ public class LogFactory {
 	protected static final LogFactory instance = new LogFactory();
 	private I_Collection preInitLoggers = new ArrayCollection();
 	volatile private I_Map loggers;
+	volatile boolean firstTime = true;
 	
 	private LogFactory() {}
 	
@@ -51,8 +52,6 @@ public class LogFactory {
 	}
 
 	public synchronized void resetLogLevels(I_Map props, I_LogFactory p) {
-		boolean firstTime = false;
-		
 		if (loggers == null) {
 			firstTime = true;
 			loggers = MapFactory.create();
@@ -73,10 +72,19 @@ public class LogFactory {
 		resetLevels(loggers, LogPlatform.getProps());
 		if (firstTime) {
 			I_Iterator it = DeferredLog.deferredMessages.getIterator();
+			if (LogPlatform.log) {
+				System.out.println("there are " + DeferredLog.deferredMessages.size() + 
+						" deferred log messages.");
+			}
 			while (it.hasNext()) {
 				LogMessage message = (LogMessage) it.next();
 				((DeferredLog) message.getLog()).consumeMessage(message);
+				if (LogPlatform.log) {
+					System.out.println("consuming log message " + message + 
+							" with log " + message.getLog() + " at level " + message.getLog().getLevel());
+				}
 			}
+			firstTime = false;
 		}
 	}
 	

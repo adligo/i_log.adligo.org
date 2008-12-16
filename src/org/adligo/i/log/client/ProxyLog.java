@@ -31,7 +31,7 @@ public class ProxyLog  implements LogMutant {
 	
 	public synchronized void addDelegate(Log p) {
 		if (LogPlatform.log) {
-			System.out.println("entering add delegate in ProxyLog " + p + "\n\t level " + p.getLevel() + " for class " + logClass.getName());
+			System.out.println("entering add delegate " + p + " in " + this + "\n\t level " + p.getLevel() + " for class " + logClass.getName());
 		}
 		if (p != null) {
 			if (single_delegate == null) {
@@ -270,19 +270,17 @@ public class ProxyLog  implements LogMutant {
 	}
 
 	public void log(int type, Object message, Throwable t) {
-		if (delegates == null && single_delegate != null) {
-			if (single_delegate.getLevel() >= type) {
+		if (type >= level) {
+			if (delegates == null && single_delegate != null) {
 				single_delegate.log(type, message, t);
-			}
-		} else if (delegates != null) {
-			I_Iterator it = delegates.getIterator();
-			while (it.hasNext()) {
-				Log delegate = (Log) it.next();
-				if (delegate.getLevel() >= type) {
+			} else if (delegates != null) {
+				I_Iterator it = delegates.getIterator();
+				while (it.hasNext()) {
+					Log delegate = (Log) it.next();
 					delegate.log(type, message, t);
 				}
-			}
-		} 
+			} 
+		}
 	}
 
 	public short getLevel() {
