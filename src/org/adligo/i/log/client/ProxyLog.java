@@ -44,7 +44,7 @@ public class ProxyLog  implements LogMutant {
 	}
 	
 	public I_Iterator getDelegates() {
-		if (delegates == null) {
+		if (delegates == null && single_delegate != null) {
 			return new ArrayIterator(new Log[] {single_delegate});
 		} else if (delegates != null) {
 			return delegates.getIterator();
