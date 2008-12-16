@@ -165,7 +165,7 @@ public class ProxyLog  implements LogMutant {
 	public void setLogLevel(I_Map props) {
 		if (delegates == null && single_delegate != null) {
 			single_delegate.setLogLevel(props);
-		} else {
+		} else if (delegates != null){
 			I_Iterator it = delegates.getIterator();
 			while (it.hasNext()) {
 				LogMutant delegate = (LogMutant) it.next();
