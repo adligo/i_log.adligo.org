@@ -1,6 +1,7 @@
 package org.adligo.i.log.client;
 
 import org.adligo.i.util.client.Event;
+import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.Platform;
@@ -29,6 +30,7 @@ public class LogPlatform implements I_Listener {
 	
 	private static final LogPlatform instance = new LogPlatform();
 	private static String logConfigName = null;
+	public static final boolean log = true;
 	
 	private static I_Map props = null;
 	private static I_NetLogDispatcher dispatcher = null;
@@ -38,11 +40,23 @@ public class LogPlatform implements I_Listener {
 	
 
 	public void onEvent(Event p) {
+		if (log) {
+			System.out.println("entering onEvent in LogPlatform");
+		}
 		if (p.threwException()) {
 			p.getException().printStackTrace();
 		} else {
 			synchronized (LogPlatform.class) {
 				props = (I_Map) p.getValue();
+			}
+			if (log) {
+				System.out.println("property file looked like...");
+				I_Iterator it = props.getIterator();
+				while (it.hasNext()) {
+					Object key = it.next();
+					Object value = props.get(key);
+					System.out.println("" + key + "=" + value);
+				}
 			}
 			LogFactory.instance.resetLogLevels(props, customFactory);
 		}
