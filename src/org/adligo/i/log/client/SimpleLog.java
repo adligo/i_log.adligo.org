@@ -96,7 +96,7 @@ public class SimpleLog implements LogMutant {
         setLogLevel(props);
     }
 
-	public void setLogLevel(I_Map props) {
+	public static short getLogLevel(I_Map props, String logName) {
 		// Set log level from properties
         String lvl = getStringProperty(props, logName);
         
@@ -113,22 +113,24 @@ public class SimpleLog implements LogMutant {
         }
 
         if("all".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_ALL);
+            return LogMutant.LOG_LEVEL_ALL;
         } else if("trace".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_TRACE);
+        	return LogMutant.LOG_LEVEL_TRACE;
         } else if("debug".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_DEBUG);
+        	return LogMutant.LOG_LEVEL_DEBUG;
         } else if("info".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_INFO);
+        	return LogMutant.LOG_LEVEL_INFO;
         } else if("warn".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_WARN);
+        	return LogMutant.LOG_LEVEL_WARN;
         } else if("error".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_ERROR);
+        	return LogMutant.LOG_LEVEL_ERROR;
         } else if("fatal".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_FATAL);
+        	return LogMutant.LOG_LEVEL_FATAL;
         } else if("off".equalsIgnoreCase(lvl)) {
-            setLevel(LogMutant.LOG_LEVEL_OFF);
+        	return LogMutant.LOG_LEVEL_OFF;
         }
+        return LogMutant.LOG_LEVEL_INFO;
+        
         //System.out.println("Log " + name  + " is set to " + getLevel());
 	}
 
@@ -512,6 +514,10 @@ public class SimpleLog implements LogMutant {
         return -1;
     }
 
+    public void setLogLevel(I_Map p) {
+    	this.setLevel(this.getLogLevel(p, logName));
+    }
+    
     public static boolean isLevelEnabled(int logLevel, int currentLevel) {
         return (logLevel >= currentLevel);
     }

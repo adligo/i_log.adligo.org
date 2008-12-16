@@ -43,9 +43,6 @@ public class ProxyLog  implements LogMutant {
 				}
 				delegates.add(p);
 			}
-			if (p.getLevel() < level) {
-				level = p.getLevel();
-			}
 		}
 	}
 	
@@ -185,6 +182,7 @@ public class ProxyLog  implements LogMutant {
 				delegate.setLogLevel(props);
 			}
 		}
+		this.level = SimpleLog.getLogLevel(props, logClass.getName());
 	}
 	
 	public boolean isDebugEnabled() {
