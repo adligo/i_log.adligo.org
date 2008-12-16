@@ -1,5 +1,6 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.util.client.ArrayIterator;
 import org.adligo.i.util.client.ClassUtils;
 import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.I_Collection;
@@ -43,7 +44,13 @@ public class ProxyLog  implements LogMutant {
 	}
 	
 	public I_Iterator getDelegates() {
-		return delegates.getIterator();
+		if (delegates == null) {
+			return new ArrayIterator(new Log[] {single_delegate});
+		} else if (delegates != null) {
+			return delegates.getIterator();
+		} else {
+			return new ArrayIterator(new Log[] {});
+		}
 	}
 
 	public void debug(Object message, Throwable t) {
