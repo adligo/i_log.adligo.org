@@ -2,10 +2,10 @@ package org.adligo.i.log.client;
 
 
 public class LogMessage {
-	private Log log = null;
+	private I_LogMutant log = null;
 	private Throwable throwable = null;
 	private Object message = null;
-	private short level = LogMutant.LOG_LEVEL_INFO;
+	private short level = I_LogDelegate.LOG_LEVEL_INFO;
 	
 	public short getLevel() {
 		return level;
@@ -35,10 +35,10 @@ public class LogMessage {
 		this.throwable = throwable;
 	}
 	
-	public Log getLog() {
+	public I_LogMutant getLog() {
 		return log;
 	}
-	public void setLog(Log log) {
+	public void setLog(I_LogMutant log) {
 		this.log = log;
 	}
 }

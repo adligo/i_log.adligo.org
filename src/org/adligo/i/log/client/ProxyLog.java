@@ -19,19 +19,20 @@ import org.adligo.i.util.client.I_Map;
  * @author scott
  *
  */
-public class ProxyLog  implements LogMutant {
-	protected Log single_delegate = null;
+public class ProxyLog  implements I_LogMutant, I_LogDelegate {
+	protected I_LogDelegate single_delegate = null;
 	private I_Collection delegates = null;
 	private Class logClass;
-	private short level = LogMutant.LOG_LEVEL_INFO;
+	private short level = I_LogDelegate.LOG_LEVEL_INFO;
 	
 	public ProxyLog(Class c) {
 		 logClass = c;
 	}
 	
-	public synchronized void addDelegate(Log p) {
+	public synchronized void addDelegate(I_LogDelegate p) {
 		if (LogPlatform.log) {
-			System.out.println("entering add delegate " + p + " in " + this + "\n\t level " + p.getLevel() + " for class " + logClass.getName());
+			System.out.println("entering add delegate " + p + 
+					" in " + this + " for class " + logClass.getName());
 		}
 		if (p != null) {
 			if (single_delegate == null) {
@@ -46,25 +47,31 @@ public class ProxyLog  implements LogMutant {
 		}
 	}
 	
+	/**
+	 * returns a iterator of 
+	 * I_LogDelegates
+	 * 
+	 * @return
+	 */
 	public I_Iterator getDelegates() {
 		if (delegates == null && single_delegate != null) {
-			return new ArrayIterator(new Log[] {single_delegate});
+			return new ArrayIterator(new I_LogDelegate[] {single_delegate});
 		} else if (delegates != null) {
 			return delegates.getIterator();
 		} else {
-			return new ArrayIterator(new Log[] {});
+			return new ArrayIterator(new I_LogDelegate[] {});
 		}
 	}
 
 	public void debug(Object message, Throwable t) {
 		if (isDebugEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.debug(message, t);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_DEBUG, message, t);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.debug(message, t);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_DEBUG, message, t);
 				}
 			} 
 		}
@@ -73,12 +80,12 @@ public class ProxyLog  implements LogMutant {
 	public void debug(Object message) {
 		if (isDebugEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.debug(message);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_DEBUG, message, null);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.debug(message);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_DEBUG, message, null);
 				}
 			} 
 		}
@@ -87,12 +94,12 @@ public class ProxyLog  implements LogMutant {
 	public void error(Object message, Throwable t) {
 		if (isErrorEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.error(message, t);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_ERROR, message, t);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.error(message, t);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_ERROR, message, t);
 				}
 			} 
 		}
@@ -101,12 +108,12 @@ public class ProxyLog  implements LogMutant {
 	public void error(Object message) {
 		if (isErrorEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.error(message);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_ERROR, message, null);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.error(message);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_ERROR, message, null);
 				}
 			} 
 		}
@@ -115,12 +122,12 @@ public class ProxyLog  implements LogMutant {
 	public void fatal(Object message, Throwable t) {
 		if (isFatalEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.fatal(message, t);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_FATAL, message, t);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.fatal(message, t);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_FATAL, message, t);
 				}
 			} 
 		}
@@ -129,12 +136,12 @@ public class ProxyLog  implements LogMutant {
 	public void fatal(Object message) {
 		if (isFatalEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.fatal(message);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_FATAL, message, null);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.fatal(message);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_FATAL, message, null);
 				}
 			} 
 		}
@@ -143,12 +150,12 @@ public class ProxyLog  implements LogMutant {
 	public void info(Object message, Throwable t) {
 		if (isInfoEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.info(message, t);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_INFO, message, t);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.info(message, t);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_INFO, message, t);
 				}
 			}
 		}
@@ -157,12 +164,12 @@ public class ProxyLog  implements LogMutant {
 	public void info(Object message) {
 		if (isInfoEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.info(message);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_INFO, message, null);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.info(message);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_INFO, message, null);
 				}
 			}
 		}
@@ -173,51 +180,43 @@ public class ProxyLog  implements LogMutant {
 	}
 	
 	public void setLogLevel(I_Map props) {
-		if (delegates == null && single_delegate != null) {
-			single_delegate.setLogLevel(props);
-		} else if (delegates != null){
-			I_Iterator it = delegates.getIterator();
-			while (it.hasNext()) {
-				LogMutant delegate = (LogMutant) it.next();
-				delegate.setLogLevel(props);
-			}
-		}
+		// the delegates don't need a log level
 		this.level = SimpleLog.getLogLevel(props, logClass.getName());
 	}
 	
 	public boolean isDebugEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_DEBUG, this.level);
+		return SimpleLog.isLevelEnabled(I_LogDelegate.LOG_LEVEL_DEBUG, this.level);
 	}
 
 	public boolean isErrorEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_ERROR, this.level);
+		return SimpleLog.isLevelEnabled(I_LogDelegate.LOG_LEVEL_ERROR, this.level);
 	}
 
 	public boolean isFatalEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_FATAL, this.level);
+		return SimpleLog.isLevelEnabled(I_LogDelegate.LOG_LEVEL_FATAL, this.level);
 	}
 
 	public boolean isInfoEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_INFO, this.level);
+		return SimpleLog.isLevelEnabled(I_LogDelegate.LOG_LEVEL_INFO, this.level);
 	}
 
 	public boolean isTraceEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_TRACE, this.level);
+		return SimpleLog.isLevelEnabled(I_LogDelegate.LOG_LEVEL_TRACE, this.level);
 	}
 
 	public boolean isWarnEnabled() {
-		return SimpleLog.isLevelEnabled(LogMutant.LOG_LEVEL_WARN, this.level);
+		return SimpleLog.isLevelEnabled(I_LogDelegate.LOG_LEVEL_WARN, this.level);
 	}
 
 	public void trace(Object message, Throwable t) {
 		if (isTraceEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.trace(message, t);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_TRACE, message, t);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.trace(message, t);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_TRACE, message, t);
 				}
 			} 
 		}
@@ -226,12 +225,12 @@ public class ProxyLog  implements LogMutant {
 	public void trace(Object message) {
 		if (isTraceEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.trace(message);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_TRACE, message, null);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.trace(message);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_TRACE, message, null);
 				}
 			} 
 		}
@@ -241,12 +240,12 @@ public class ProxyLog  implements LogMutant {
 		if (isWarnEnabled()) {
 			
 			if (delegates == null && single_delegate != null) {
-				single_delegate.warn(message, t);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_WARN, message, t);
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.warn(message, t);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_WARN, message, t);
 				}
 			} 
 		}
@@ -255,31 +254,14 @@ public class ProxyLog  implements LogMutant {
 	public void warn(Object message) {
 		if (isWarnEnabled()) {
 			if (delegates == null && single_delegate != null) {
-				single_delegate.warn(message);
+				single_delegate.log(I_LogDelegate.LOG_LEVEL_WARN, message, null);
 			} else if (delegates != null) {
-				
-				
 				I_Iterator it = delegates.getIterator();
-				
 				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.warn(message);
+					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					delegate.log(I_LogDelegate.LOG_LEVEL_WARN, message, null);
 				}
 			}
-		}
-	}
-
-	public void log(int type, Object message, Throwable t) {
-		if (type >= level) {
-			if (delegates == null && single_delegate != null) {
-				single_delegate.log(type, message, t);
-			} else if (delegates != null) {
-				I_Iterator it = delegates.getIterator();
-				while (it.hasNext()) {
-					Log delegate = (Log) it.next();
-					delegate.log(type, message, t);
-				}
-			} 
 		}
 	}
 
@@ -291,4 +273,27 @@ public class ProxyLog  implements LogMutant {
 		return logClass;
 	}
 
+	public void log(int type, Object message, Throwable t) {
+		switch (type) {
+			case I_LogDelegate.LOG_LEVEL_TRACE:
+				this.trace(message, t);
+				break;
+			case I_LogDelegate.LOG_LEVEL_DEBUG:
+				this.debug(message, t);
+				break;
+			case I_LogDelegate.LOG_LEVEL_INFO:
+				this.info(message, t);
+				break;
+			case I_LogDelegate.LOG_LEVEL_WARN:
+				this.warn(message, t);
+				break;
+			case I_LogDelegate.LOG_LEVEL_ERROR:
+				this.error(message, t);
+				break;
+			case I_LogDelegate.LOG_LEVEL_FATAL:
+				this.fatal(message, t);
+				break;
+		}
+		
+	}
 }

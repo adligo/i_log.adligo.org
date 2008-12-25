@@ -13,5 +13,5 @@ public interface I_LogFactory {
 	 * @param c
 	 * @return
 	 */
-	public Log getLog(Class clazz);
+	public I_LogDelegate getLog(Class clazz);
 }

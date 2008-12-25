@@ -58,7 +58,7 @@ public class LogFactory {
 			I_Iterator it = preInitLoggers.getIterator();
 			while (it.hasNext()) {
 				DeferredLog log = (DeferredLog) it.next();
-				Log delegate = null;
+				I_LogDelegate delegate = null;
 				if (p != null) {
 					delegate = p.getLog(log.getLogClass());
 				} else {
@@ -92,7 +92,7 @@ public class LogFactory {
 		I_Iterator it = loggers.getIterator();
 		while (it.hasNext()) {
 			Object key = it.next();
-			LogMutant log = (LogMutant) loggers.get(key);
+			I_LogMutant log = (I_LogMutant) loggers.get(key);
 			
 			log.setLogLevel(props);
 		}
