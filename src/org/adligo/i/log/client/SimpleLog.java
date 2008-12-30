@@ -20,6 +20,7 @@ package org.adligo.i.log.client;
 
 
 import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.StringUtils;
 
 /**
  * 
@@ -66,7 +67,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 
     private static boolean getBooleanProperty(I_Map props, String name, boolean dephault) {
         String prop = getStringProperty(props, name);
-        return (prop == null) ? dephault : "true".equalsIgnoreCase(prop);
+        return (prop == null) ? dephault : StringUtils.equalsIgnoreCase("true", prop);
     }
 
     // ------------------------------------------------------------- Attributes
@@ -114,21 +115,21 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
             lvl =  getStringProperty(props,systemPrefix + "defaultlog");
         }
 
-        if("all".equalsIgnoreCase(lvl)) {
+        if(StringUtils.equalsIgnoreCase("all",lvl)) {
             return I_LogDelegate.LOG_LEVEL_ALL;
-        } else if("trace".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("trace",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_TRACE;
-        } else if("debug".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("debug",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_DEBUG;
-        } else if("info".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("info",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_INFO;
-        } else if("warn".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("warn",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_WARN;
-        } else if("error".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("error",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_ERROR;
-        } else if("fatal".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("fatal",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_FATAL;
-        } else if("off".equalsIgnoreCase(lvl)) {
+        } else if(StringUtils.equalsIgnoreCase("off",lvl)) {
         	return I_LogDelegate.LOG_LEVEL_OFF;
         }
         return I_LogDelegate.LOG_LEVEL_INFO;
@@ -206,7 +207,15 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
             buf.append(t.toString());
             buf.append(">");
 
-            t.printStackTrace();
+            buf.append("\n");
+            StackTraceElement [] trace = t.getStackTrace();
+            
+            for (int j = 0; j < trace.length; j++) {
+            	buf.append("\t at ");
+            	buf.append(trace[j].toString());
+            	buf.append("\n");
+			}
+           
         }
 
         // Print to the appropriate destination
