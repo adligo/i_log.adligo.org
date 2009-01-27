@@ -119,4 +119,51 @@ public class DeferredLog extends ProxyLog {
 		super.log(p.getLevel(), p.getMessage(), p.getThrowable());
 	}
 	
+	public boolean isDebugEnabled() {
+		if (super.single_delegate == null) {
+			return true;
+		} else {
+			return super.isDebugEnabled();
+		}
+	}
+
+	public boolean isErrorEnabled() {
+		if (super.single_delegate == null) {
+			return true;
+		} else {
+			return super.isErrorEnabled();
+		}
+	}
+
+	public boolean isFatalEnabled() {
+		if (super.single_delegate == null) {
+			return true;
+		} else {
+			return super.isFatalEnabled();
+		}
+	}
+
+	public boolean isInfoEnabled() {
+		if (super.single_delegate == null) {
+			return true;
+		} else {
+			return super.isInfoEnabled();
+		}
+	}
+
+	public boolean isTraceEnabled() {
+		if (super.single_delegate == null) {
+			return true;
+		} else {
+			return super.isTraceEnabled();
+		}
+	}
+
+	public boolean isWarnEnabled() {
+		if (super.single_delegate == null) {
+			return true;
+		} else {
+			return super.isWarnEnabled();
+		}
+	}
 }
