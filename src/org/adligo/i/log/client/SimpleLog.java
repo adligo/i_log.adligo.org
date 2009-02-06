@@ -220,7 +220,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
         	StackTraceElement [] trace = t.getStackTrace();
         	buf.append(" <");
             buf.append(t.toString());
-            buf.append("> ");
+            buf.append(">");
 
             buf.append("\n");
            
