@@ -32,13 +32,10 @@ public class NetLog extends SimpleLog implements Log {
         	url.append(LogUrl.NAME,logName);
         }
 
-        // Append the message
-        url.append(LogUrl.MESSAGE, String.valueOf(message));
-
-        // Append stack trace if not null
-        if(t != null)  {
-            url.append(LogUrl.STACK, t.toString());
-        }
+        StringBuffer buf = new StringBuffer();
+        SimpleLog.createLogMessage(message, t, buf);
+        url.append(LogUrl.MESSAGE, buf.toString());
+        
         I_NetLogDispatcher dispatcher = LogPlatform.getDispatcher();
         if (dispatcher != null) {
         	dispatcher.dispatch(url.toString());

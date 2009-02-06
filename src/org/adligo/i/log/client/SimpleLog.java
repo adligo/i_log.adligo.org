@@ -198,17 +198,32 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
             buf.append(String.valueOf(logName)).append(" - ");
         }
 
-        // Append the message
+        createLogMessage(message, t, buf);
+
+        // Print to the appropriate destination
+        out.write(buf.toString());
+
+    }
+
+    /**
+     * Note GWT appears to have implement 
+     * Throwable getStackTrace()
+     * by always returning 0 StackTraceElements in the actual javascript
+     * so i_log can't get a stacktrace when running in a actual browser
+     */
+	public static void createLogMessage(Object message, Throwable t, StringBuffer buf) {
+		// Append the message
         buf.append(String.valueOf(message));
 
         // Append stack trace if not null
         if(t != null) {
-            buf.append(" <");
+        	StackTraceElement [] trace = t.getStackTrace();
+        	buf.append(" <");
             buf.append(t.toString());
-            buf.append(">");
+            buf.append("> ");
 
             buf.append("\n");
-            StackTraceElement [] trace = t.getStackTrace();
+           
             
             for (int j = 0; j < trace.length; j++) {
             	buf.append("\t at ");
@@ -217,11 +232,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 			}
            
         }
-
-        // Print to the appropriate destination
-        out.write(buf.toString());
-
-    }
+	}
 
 
 
