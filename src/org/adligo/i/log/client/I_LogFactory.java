@@ -13,4 +13,5 @@ public interface I_LogFactory {
 	 * @return
 	 */
 	public I_LogDelegate getLog(Class clazz);
+	public I_LogDelegate getLog(String name);
 }

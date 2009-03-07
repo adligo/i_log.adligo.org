@@ -10,6 +10,10 @@ public class DeferredLog extends ProxyLog {
 		super(clazz);
 	}
 	
+	public DeferredLog(String clazz) {
+		super(clazz);
+	}
+	
 	public void debug(Object message, Throwable t) {
 		if (super.single_delegate == null) {
 			deferredMessages.add(createMessage(I_LogDelegate.LOG_LEVEL_DEBUG, message, t));

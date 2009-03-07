@@ -20,31 +20,45 @@ import org.adligo.i.util.client.MapFactory;
  */
 public class LogFactory {
 	protected static final LogFactory instance = new LogFactory();
-	private I_Collection preInitLoggers = new ArrayCollection();
+	private ArrayCollection preInitLoggers = new ArrayCollection();
 	volatile private I_Map loggers;
 	volatile boolean firstTime = true;
 	
 	private LogFactory() {}
 	
 	public static Log getLog(Class clazz) {
+		if (clazz == null) {
+			throw new NullPointerException(
+					"LogFactory can't accept a null Class for \n" +
+					" getLog(Class clazz)");
+		}
+		return instance.getLogInternal(clazz.getName());
+	}
+	
+	public static Log getLog(String clazz) {
 		return instance.getLogInternal(clazz);
 	}
 	
-	public synchronized Log getLogInternal(Class clazz) {
+	public synchronized Log getLogInternal(String clazz) {
 		//System.out.println("getting log for " + clazz);
 		
 		Log toRet;
 		if (loggers == null) {
-			// its ok if a log get added twice here,
-			// when initalization happens it will be normalized before
-			// being put in the lookup
 			toRet = new DeferredLog(clazz);
-			preInitLoggers.add(toRet);
+			Log current = (Log) preInitLoggers.get(toRet);
+			if (LogPlatform.log) {
+				System.out.println("toRet is " + toRet +
+						" current is " + current);
+			}
+			if (current != null) {
+				toRet = current;
+			} else {
+				preInitLoggers.add(toRet);
+			}
 		} else {
 			toRet = (Log) loggers.get(clazz);
 			if (toRet == null) {
-				String name = ClassUtils.getClassName(clazz);
-				toRet = new SimpleLog(name, LogPlatform.getProps());
+				toRet = new SimpleLog(clazz, LogPlatform.getProps());
 				loggers.put(clazz, toRet);
 			}
 		}
@@ -62,8 +76,8 @@ public class LogFactory {
 				if (p != null) {
 					delegate = p.getLog(log.getLogClass());
 				} else {
-					Class clazz = log.getLogClass();
-					delegate = new SimpleLog(clazz.getName(), props);
+					String clazz = log.getLogClass();
+					delegate = new SimpleLog(clazz, props);
 				}
 				log.addDelegate(delegate);
 				loggers.put(log.getLogClass(), log);

@@ -22,17 +22,29 @@ import org.adligo.i.util.client.I_Map;
 public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	protected I_LogDelegate single_delegate = null;
 	private I_Collection delegates = null;
-	private Class logClass;
+	private String logClass;
 	private short level = I_LogDelegate.LOG_LEVEL_INFO;
 	
 	public ProxyLog(Class c) {
-		 logClass = c;
+		if (c == null) {
+			throw new NullPointerException("ProxyLog " +
+					"constructor can not accept a null Class");
+		}
+		logClass = c.getName();
+	}
+	
+	public ProxyLog(String name) {
+		 if (name == null) {
+			 throw new NullPointerException("ProxyLog " +
+					"constructor can not accept a String name");
+		 }
+		 logClass = name;
 	}
 	
 	public synchronized void addDelegate(I_LogDelegate p) {
 		if (LogPlatform.log) {
 			System.out.println("entering add delegate " + p + 
-					" in " + this + " for class " + logClass.getName());
+					" in " + this + " for class " + logClass);
 		}
 		if (p != null) {
 			if (single_delegate == null) {
@@ -181,7 +193,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	
 	public void setLogLevel(I_Map props) {
 		// the delegates don't need a log level
-		this.level = SimpleLog.getLogLevel(props, logClass.getName());
+		this.level = SimpleLog.getLogLevel(props, logClass);
 	}
 	
 	public boolean isDebugEnabled() {
@@ -269,7 +281,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 		return level;
 	}
 
-	public Class getLogClass() {
+	public String getLogClass() {
 		return logClass;
 	}
 
@@ -295,5 +307,29 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 				break;
 		}
 		
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((logClass == null) ? 0 : logClass.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProxyLog other = (ProxyLog) obj;
+		if (logClass == null) {
+			if (other.logClass != null)
+				return false;
+		} else if (!logClass.equals(other.logClass))
+			return false;
+		return true;
 	}
 }
