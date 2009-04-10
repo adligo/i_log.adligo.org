@@ -30,7 +30,7 @@ public class LogPlatform implements I_Listener {
 	
 	private static final LogPlatform instance = new LogPlatform();
 	private static String logConfigName = null;
-	public static boolean log = true;
+	public static boolean log = false;
 	
 	private static I_Map props = null;
 	private static I_NetLogDispatcher dispatcher = null;
