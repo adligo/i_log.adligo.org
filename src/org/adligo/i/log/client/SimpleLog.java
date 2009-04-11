@@ -60,15 +60,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
         return (String) props.get(name);
     }
 
-    private static String getStringProperty(I_Map props, String name, String dephault) {
-        String prop = getStringProperty(props, name);
-        return (prop == null) ? dephault : prop;
-    }
 
-    private static boolean getBooleanProperty(I_Map props, String name, boolean dephault) {
-        String prop = getStringProperty(props, name);
-        return (prop == null) ? dephault : StringUtils.equalsIgnoreCase("true", prop);
-    }
 
     // ------------------------------------------------------------- Attributes
 
@@ -524,7 +516,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     }
 
     public void setLogLevel(I_Map p) {
-    	this.setLevel(this.getLogLevel(p, logName));
+    	this.setLevel(SimpleLog.getLogLevel(p, logName));
     }
     
     public static boolean isLevelEnabled(int logLevel, int currentLevel) {

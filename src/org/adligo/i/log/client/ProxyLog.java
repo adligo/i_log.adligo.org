@@ -1,7 +1,6 @@
 package org.adligo.i.log.client;
 
 import org.adligo.i.util.client.ArrayIterator;
-import org.adligo.i.util.client.ClassUtils;
 import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Iterator;
