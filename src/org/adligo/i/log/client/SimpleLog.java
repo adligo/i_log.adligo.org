@@ -19,6 +19,7 @@
 package org.adligo.i.log.client;
 
 
+import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.StringUtils;
 
@@ -57,7 +58,32 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     	if (props == null) {
     		return null;
     	}
-        return (String) props.get(name);
+    	String toRet = (String) props.get(name);
+    	if (toRet == null) {
+    		String longestMatch = null;
+    		I_Iterator it = props.keys();
+    		//spin through all of the keys trying to matchup a package name
+    		// to see if a package is getting its level set
+    		while (it.hasNext()) {
+    			String thisOne = (String) it.next();
+    			
+    			if (name.indexOf(thisOne) != -1) {
+    				//packages match
+    				if (longestMatch == null) {
+    					longestMatch = thisOne;
+    				} else {
+    					// com.adligo is overridden by com.adligo.i exc
+    					if (thisOne.length() >  longestMatch.length()) {
+    						longestMatch =  thisOne;
+    					}
+    				}
+    			}
+    		}
+    		if (longestMatch != null) {
+    			toRet = (String) props.get(longestMatch);
+    		}
+    	}
+        return toRet;
     }
 
 
