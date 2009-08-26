@@ -41,4 +41,27 @@ public class LogMessage {
 	public void setLog(I_LogMutant log) {
 		this.log = log;
 	}
+	
+	public String getLevelString(){
+		switch (level) {
+			case I_LogDelegate.LOG_LEVEL_TRACE:
+				return "TRACE";
+			case I_LogDelegate.LOG_LEVEL_DEBUG:
+				return "DEBUG";
+			case I_LogDelegate.LOG_LEVEL_INFO:
+				return "INFO";
+			case I_LogDelegate.LOG_LEVEL_WARN:
+				return "WARN";
+			case I_LogDelegate.LOG_LEVEL_ERROR:
+				return "ERROR";
+			case I_LogDelegate.LOG_LEVEL_FATAL:
+				return "FATAL";
+			case I_LogDelegate.LOG_LEVEL_ALL:
+				return "ALL";
+			case I_LogDelegate.LOG_LEVEL_OFF:
+				return "OFF";
+			default:
+				return "UNKNOWN_LEVEL";
+		}
+	}
 }

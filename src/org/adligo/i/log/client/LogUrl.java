@@ -40,6 +40,19 @@ public class LogUrl {
 	 * the name of the Log instance
 	 */
 	public static final String NAME = "n";
+	/**
+	 * the id of the window (kept in session)
+	 * of the browser window sending this log message
+	 */
+	public static final String WINDOW_ID = "w";
+	/**
+	 * for non cookie users
+	 */
+	public static final String JSESSION_ID = "jsessionid";
+	/**
+	 * request id
+	 */
+	public static final String REQUEST_ID = "r";
 	
 	public static final I_ImmutableMap URL_ESCAPE_CODES = getUrlEscapeCodes();
 	private boolean hasQ = false;
