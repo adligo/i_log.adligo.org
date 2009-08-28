@@ -59,8 +59,11 @@ public class LogFactory {
 		}
 		return toRet;
 	}
-
-	public synchronized void resetLogLevels(I_Map props, I_LogFactory p) {
+	public synchronized void resetLogLevels() {
+		resetLevels(loggers, LogPlatform.getProps());
+	}
+	
+	public synchronized void setInitalLogLevels(I_Map props, I_LogFactory p) {
 		if (loggers == null) {
 			firstTime = true;
 			loggers = MapFactory.create();
@@ -104,6 +107,9 @@ public class LogFactory {
 			I_LogMutant log = (I_LogMutant) loggers.get(key);
 			
 			log.setLogLevel(props);
+			if (LogPlatform.log) {
+				System.out.println("Log " + key + " is now at level " + log.getLevel());
+			}
 		}
 	}	
 	

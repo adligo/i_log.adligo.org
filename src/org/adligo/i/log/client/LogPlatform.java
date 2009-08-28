@@ -35,6 +35,7 @@ public class LogPlatform implements I_Listener {
 	private static I_Map props = null;
 	private static I_NetLogDispatcher dispatcher = null;
 	private static boolean isInit = false;
+	private static boolean isInitLevelsSet = false;
 	
 	private static I_LogFactory customFactory = null;
 	
@@ -49,16 +50,21 @@ public class LogPlatform implements I_Listener {
 			synchronized (LogPlatform.class) {
 				props = (I_Map) p.getValue();
 			}
-			if (log) {
-				System.out.println("property file looked like...");
-				I_Iterator it = props.getIterator();
-				while (it.hasNext()) {
-					Object key = it.next();
-					Object value = props.get(key);
-					System.out.println("" + key + "=" + value);
+			if (!isInitLevelsSet) {
+				if (log) {
+					System.out.println("property file looked like...");
+					I_Iterator it = props.getIterator();
+					while (it.hasNext()) {
+						Object key = it.next();
+						Object value = props.get(key);
+						System.out.println("" + key + "=" + value);
+					}
 				}
+				LogFactory.instance.setInitalLogLevels(props, customFactory);
+				isInitLevelsSet = true;
+			} else {
+				LogFactory.instance.resetLogLevels();
 			}
-			LogFactory.instance.resetLogLevels(props, customFactory);
 		}
 	}
 
@@ -87,6 +93,10 @@ public class LogPlatform implements I_Listener {
 		}
 	}
 
+	public synchronized static final void resetLevels(String pLogConfignName) {
+		logConfigName = pLogConfignName;
+		PropertyFactory.get(pLogConfignName, instance);
+	}
 	/**
 	 * 
 	 * @param pLogConfignName
