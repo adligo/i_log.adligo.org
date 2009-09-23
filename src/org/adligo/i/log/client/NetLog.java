@@ -2,6 +2,7 @@ package org.adligo.i.log.client;
 
 import org.adligo.i.util.client.ClassUtils;
 import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.StringUtils;
 
 public class NetLog extends SimpleLog implements Log {
 	private String baseUrl = null;
@@ -15,7 +16,10 @@ public class NetLog extends SimpleLog implements Log {
 	
 	public NetLog(String clazz, I_Map props) {
 		super(clazz, props);
-		baseUrl = (String) props.get(LogPlatform.NET_LOG_URL) + "base";
+		baseUrl = (String) props.get(LogPlatform.NET_LOG_URL);
+		if (StringUtils.isEmpty(baseUrl)) {
+			baseUrl = "/log";
+		}
 	}
 	
     public void log(int type, Object message, Throwable t) {

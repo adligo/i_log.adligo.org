@@ -43,6 +43,10 @@ public class LogMessage {
 	}
 	
 	public String getLevelString(){
+		return getLevelString(level);
+	}
+	
+	public static String getLevelString(short level) {
 		switch (level) {
 			case I_LogDelegate.LOG_LEVEL_TRACE:
 				return "TRACE";
