@@ -6,5 +6,5 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/i_util"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/J2ME_3"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="classes_e"/>
 </classpath>
