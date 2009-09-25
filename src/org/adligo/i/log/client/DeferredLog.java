@@ -1,5 +1,7 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.log.client.models.LogMessage;
+import org.adligo.i.log.client.models.LogMessageFactory;
 import org.adligo.i.util.client.ArrayCollection;
 import org.adligo.i.util.client.I_Collection;
 
@@ -111,11 +113,11 @@ public class DeferredLog extends ProxyLog {
 	}
 
 	private LogMessage createMessage(short level, Object message, Throwable t) {
-		LogMessage toRet = new LogMessage();
+		LogMessage toRet = LogMessageFactory.createMessage(message);
 		toRet.setLevel(level);
 		toRet.setMessage(message);
 		toRet.setThrowable(t);
-		toRet.setLog(this);
+		toRet.setName(super.getLogName());
 		return toRet;
 	}
 	

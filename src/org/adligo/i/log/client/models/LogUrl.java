@@ -1,5 +1,6 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.client.models;
 
+import org.adligo.i.log.client.DeferredLog;
 import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.MapFactory;
@@ -113,6 +114,25 @@ public class LogUrl {
 	public LogUrl(String inital, boolean hasQ) {
 		sb.append(inital);
 		this.hasQ = hasQ;
+	}
+	
+	public LogUrl(String inital, boolean hasQ, LogMessage message) {
+		sb.append(inital);
+		this.hasQ = hasQ;
+		appendMessage(message);
+	}
+	
+	public LogUrl(LogMessage message) {
+		this.hasQ = false;
+		appendMessage(message);
+	}
+	
+	public void appendMessage(LogMessage message) {
+		StringLogMessage m = new StringLogMessage(message);
+		this.append(LEVEL, m.getLevel());
+		this.append(NAME, m.getName());
+		this.append(WINDOW_ID, "" +m.getWindowId());
+		this.append(MESSAGE, "" +m.getMessageWithStack());
 	}
 	
 	public Object clone() {

@@ -1,5 +1,7 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.log.client.models.LogMessage;
+import org.adligo.i.log.client.models.LogMessageFactory;
 import org.adligo.i.util.client.ClassUtils;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.StringUtils;
@@ -21,36 +23,36 @@ public class NetLog extends SimpleLog implements Log {
 		}
 	}
 	
-    public void log(int type, Object message, Throwable t) {
-    	LogUrl url = new LogUrl(baseUrl, false);
-
-        url.append(LogUrl.LEVEL, type);
-
+    public void log(short type, Object message, Throwable t) {
+    	
+    	String name = "";
         // Append the name of the log instance if so configured
         if( showShortName) {
-            if( shortLogName==null ) {
-                // Cut all but the last component of the name for both styles
-                shortLogName = logName.substring(logName.lastIndexOf('.') + 1);
-                shortLogName =
-                    shortLogName.substring(shortLogName.lastIndexOf('/') + 1);
-            }
-            url.append(LogUrl.NAME, shortLogName);
+        	if (showLogName) {
+	            if( shortLogName==null ) {
+	                // Cut all but the last component of the name for both styles
+	                shortLogName = logName.substring(logName.lastIndexOf('.') + 1);
+	                shortLogName =
+	                    shortLogName.substring(shortLogName.lastIndexOf('/') + 1);
+	            }
+	            name = shortLogName;
+        	}
         } else if(showLogName) {
-        	url.append(LogUrl.NAME,logName);
+        	name = this.logName;
         }
 
         StringBuffer buf = new StringBuffer();
         SimpleLog.createLogMessage(message, t, buf);
-        url.append(LogUrl.MESSAGE, buf.toString());
-
-        if (windowId != null) {
-        	url.append(LogUrl.WINDOW_ID, "" + NetLog.windowId);
-        }
         
+        LogMessage logMessage = LogMessageFactory.createMessage(buf.toString());
+        logMessage.setLevel(type);
+        logMessage.setName(name);
+        logMessage.setThrowable(t);
+        logMessage.setWindowId(NetLog.windowId);
         
-        I_NetLogDispatcher dispatcher = LogPlatform.getDispatcher();
+        I_LogDispatcher dispatcher = LogPlatform.getDispatcher();
         if (dispatcher != null) {
-        	dispatcher.dispatch(url);
+        	dispatcher.dispatch(logMessage);
         }
     }
 

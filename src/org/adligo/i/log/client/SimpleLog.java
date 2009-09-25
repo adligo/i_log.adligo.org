@@ -19,6 +19,7 @@
 package org.adligo.i.log.client;
 
 
+import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.StringUtils;
@@ -188,20 +189,14 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      * @param message The message itself (typically a String)
      * @param t The exception whose stack trace should be logged
      */
-    public void log(int type, Object message, Throwable t) {
+    public void log(short type, Object message, Throwable t) {
     	// Use a string buffer for better performance
         StringBuffer buf = new StringBuffer();
 
 
+        
         // Append a readable representation of the log level
-        switch(type) {
-            case I_LogDelegate.LOG_LEVEL_TRACE: buf.append("[TRACE] "); break;
-            case I_LogDelegate.LOG_LEVEL_DEBUG: buf.append("[DEBUG] "); break;
-            case I_LogDelegate.LOG_LEVEL_INFO:  buf.append("[INFO] ");  break;
-            case I_LogDelegate.LOG_LEVEL_WARN:  buf.append("[WARN] ");  break;
-            case I_LogDelegate.LOG_LEVEL_ERROR: buf.append("[ERROR] "); break;
-            case I_LogDelegate.LOG_LEVEL_FATAL: buf.append("[FATAL] "); break;
-        }
+        buf.append(LogMessage.getLevelString(type)); 
 
         // Append the name of the log instance if so configured
         if( showShortName) {
@@ -232,24 +227,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 	public static void createLogMessage(Object message, Throwable t, StringBuffer buf) {
 		// Append the message
         buf.append(String.valueOf(message));
-
-        // Append stack trace if not null
-        if(t != null) {
-        	StackTraceElement [] trace = t.getStackTrace();
-        	buf.append(" <");
-            buf.append(t.toString());
-            buf.append(">");
-
-            buf.append("\n");
-           
-            
-            for (int j = 0; j < trace.length; j++) {
-            	buf.append("\t at ");
-            	buf.append(trace[j].toString());
-            	buf.append("\n");
-			}
-           
-        }
+        buf.append(LogMessage.fillInStack(t));
 	}
 
 

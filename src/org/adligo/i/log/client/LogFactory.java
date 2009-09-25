@@ -1,5 +1,6 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.util.client.ArrayCollection;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
@@ -72,13 +73,13 @@ public class LogFactory {
 				DeferredLog log = (DeferredLog) it.next();
 				I_LogDelegate delegate = null;
 				if (p != null) {
-					delegate = p.getLog(log.getLogClass());
+					delegate = p.getLog(log.getLogName());
 				} else {
-					String clazz = log.getLogClass();
+					String clazz = log.getLogName();
 					delegate = new SimpleLog(clazz, props);
 				}
 				log.addDelegate(delegate);
-				loggers.put(log.getLogClass(), log);
+				loggers.put(log.getLogName(), log);
 			}
 		}
 		resetLevels(loggers, LogPlatform.getProps());
@@ -90,10 +91,15 @@ public class LogFactory {
 			}
 			while (it.hasNext()) {
 				LogMessage message = (LogMessage) it.next();
-				((DeferredLog) message.getLog()).consumeMessage(message);
-				if (LogPlatform.log) {
-					System.out.println("consuming log message " + message + 
-							" with log " + message.getLog() + " at level " + message.getLog().getLevel());
+				if (message != null) {
+					DeferredLog el_log = (DeferredLog) loggers.get(message.getName());
+					if (el_log != null) {
+						el_log.consumeMessage(message);
+						if (LogPlatform.log) {
+							System.out.println("consuming log message " + message + 
+									" with log " + message.getName() + " at level " + message.getLevel());
+						}
+					}
 				}
 			}
 			firstTime = false;

@@ -38,5 +38,5 @@ public interface I_LogDelegate {
      * @param message
      * @param t
      */
-    public void log(int type, Object message, Throwable t);
+    public void log(short type, Object message, Throwable t);
 }

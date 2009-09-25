@@ -33,7 +33,7 @@ public class LogPlatform implements I_Listener {
 	public static boolean log = false;
 	
 	private static I_Map props = null;
-	private static I_NetLogDispatcher dispatcher = null;
+	private static I_LogDispatcher dispatcher = null;
 	private static boolean isInit = false;
 	private static boolean isInitLevelsSet = false;
 	
@@ -123,11 +123,11 @@ public class LogPlatform implements I_Listener {
 	}
 
 	
-	public static I_NetLogDispatcher getDispatcher() {
+	public static I_LogDispatcher getDispatcher() {
 		return dispatcher;
 	}
 
-	public static void setDispatcher(I_NetLogDispatcher dispatcher) {
+	public static void setDispatcher(I_LogDispatcher dispatcher) {
 		LogPlatform.dispatcher = dispatcher;
 	}
 	

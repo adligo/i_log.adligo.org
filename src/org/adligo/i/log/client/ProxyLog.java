@@ -21,7 +21,7 @@ import org.adligo.i.util.client.I_Map;
 public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	protected I_LogDelegate single_delegate = null;
 	private I_Collection delegates = null;
-	private String logClass;
+	private String logName;
 	private short level = I_LogDelegate.LOG_LEVEL_INFO;
 	
 	public ProxyLog(Class c) {
@@ -29,7 +29,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 			throw new NullPointerException("ProxyLog " +
 					"constructor can not accept a null Class");
 		}
-		logClass = c.getName();
+		logName = c.getName();
 	}
 	
 	public ProxyLog(String name) {
@@ -37,13 +37,13 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 			 throw new NullPointerException("ProxyLog " +
 					"constructor can not accept a String name");
 		 }
-		 logClass = name;
+		 logName = name;
 	}
 	
 	public synchronized void addDelegate(I_LogDelegate p) {
 		if (LogPlatform.log) {
 			System.out.println("entering add delegate " + p + 
-					" in " + this + " for class " + logClass);
+					" in " + this + " for class " + logName);
 		}
 		if (p != null) {
 			if (single_delegate == null) {
@@ -192,7 +192,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	
 	public void setLogLevel(I_Map props) {
 		// the delegates don't need a log level
-		this.level = SimpleLog.getLogLevel(props, logClass);
+		this.level = SimpleLog.getLogLevel(props, logName);
 	}
 	
 	public boolean isDebugEnabled() {
@@ -280,11 +280,11 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 		return level;
 	}
 
-	public String getLogClass() {
-		return logClass;
+	public String getLogName() {
+		return logName;
 	}
 
-	public void log(int type, Object message, Throwable t) {
+	public void log(short type, Object message, Throwable t) {
 		switch (type) {
 			case I_LogDelegate.LOG_LEVEL_TRACE:
 				this.trace(message, t);
@@ -312,7 +312,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((logClass == null) ? 0 : logClass.hashCode());
+				+ ((logName == null) ? 0 : logName.hashCode());
 		return result;
 	}
 
@@ -324,10 +324,10 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 		if (getClass() != obj.getClass())
 			return false;
 		ProxyLog other = (ProxyLog) obj;
-		if (logClass == null) {
-			if (other.logClass != null)
+		if (logName == null) {
+			if (other.logName != null)
 				return false;
-		} else if (!logClass.equals(other.logClass))
+		} else if (!logName.equals(other.logName))
 			return false;
 		return true;
 	}
