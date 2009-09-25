@@ -6,7 +6,6 @@ import org.adligo.i.util.client.StringUtils;
 
 public class NetLog extends SimpleLog implements Log {
 	private String baseUrl = null;
-	private static String jsessionid = null;
 	private static Integer windowId = null;
 	private static int requestId = 0;
 	
@@ -43,34 +42,18 @@ public class NetLog extends SimpleLog implements Log {
         StringBuffer buf = new StringBuffer();
         SimpleLog.createLogMessage(message, t, buf);
         url.append(LogUrl.MESSAGE, buf.toString());
-        if (jsessionid != null) {
-        	url.append(LogUrl.JSESSION_ID, NetLog.jsessionid);
-        }
+
         if (windowId != null) {
         	url.append(LogUrl.WINDOW_ID, "" + NetLog.windowId);
         }
         
-        //pretty lame GWT is auto cacheing requests
-        // and doesn't have a api to get around it
-        // who knows what other client apis (JREs including J2ME) may have, so leave this in
-        url.append(LogUrl.REQUEST_ID, "" + requestId);
-        synchronized (NetLog.class) {
-        	requestId++;
-		}
         
         I_NetLogDispatcher dispatcher = LogPlatform.getDispatcher();
         if (dispatcher != null) {
-        	dispatcher.dispatch(url.toString());
+        	dispatcher.dispatch(url);
         }
     }
 
-	public static String getJsessionid() {
-		return jsessionid;
-	}
-
-	public static void setJsessionid(String jsessionid) {
-		NetLog.jsessionid = jsessionid;
-	}
 
 	public static Integer getWindowId() {
 		return windowId;

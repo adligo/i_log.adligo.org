@@ -47,15 +47,37 @@ public class LogUrl {
 	public static final String WINDOW_ID = "w";
 	/**
 	 * for non cookie users
+	 * SET by the Dispatcher!
 	 */
 	public static final String JSESSION_ID = "jsessionid";
 	/**
 	 * request id
+	 * SET by the Dispatcher!
 	 */
 	public static final String REQUEST_ID = "r";
 	
 	public static final I_ImmutableMap URL_ESCAPE_CODES = getUrlEscapeCodes();
 	private boolean hasQ = false;
+	private boolean firstParam = true;
+	/**
+	 * booleans to track if certain cgi parameters have been
+	 * added, this is to Batch Log Messages in order to keep the
+	 * Request Number down on the Google app engine which is limited to 
+	 * 1,333,328 for free users even though the 
+	 * datastore and memapi will take 10x as many calls
+	 * 
+	 * This is so that the messages will not be mismatched for a url like;
+	 * ?l=1&m=hey&n=foo&l=2&m=dude&l=3&n=bar&m=bar_will_show_up_with_dude
+	 * 
+	 */
+	private boolean hasLevel = false;
+	private boolean hasMessage = false;
+	private boolean hasStack = false;
+	private boolean hasThread = false;
+	private boolean hasTime = false;
+	private boolean hasName = false;
+	private boolean hasWindowId = false;
+	// Note JSession Id and RequestId are only sent once, and should be added by the I_NetLogDispatcher
 	
 	private static I_ImmutableMap getUrlEscapeCodes() {
 		I_Map toRet = MapFactory.create();
@@ -97,15 +119,24 @@ public class LogUrl {
 		return new LogUrl(sb.toString(), hasQ);
 	}
 	public void append(String key, String value) {
-		if (!hasQ) {
-			sb.append("?");
-			hasQ= true;
-		} else {
-			sb.append("&");
-		}
+		appendQandAnd();
+		trackKey(key);
 		sb.append(key);
 		sb.append("=");
 		cleanAndAppend(value);
+	}
+	private void appendQandAnd() {
+		if (!hasQ) {
+			sb.append("?");
+			hasQ= true;
+			firstParam = false;
+		} else {
+			if (!firstParam) {
+				sb.append("&");
+			} else {
+				firstParam = false;
+			}
+		}
 	}
 	
 	private void cleanAndAppend(String p) {
@@ -122,18 +153,88 @@ public class LogUrl {
 	}
 	
 	public void append(String key, int value) {
-		if (!hasQ) {
-			sb.append("?");
-			hasQ= true;
-		} else {
-			sb.append("&");
-		}
+		appendQandAnd();
+		trackKey(key);
 		sb.append(key);
 		sb.append("=");
 		sb.append(value);
 	}
 	
+	void trackKey(String key) {
+		if (LEVEL.equals(key)) {
+			hasLevel = true;
+		} else if (MESSAGE.equals(key)) {
+			hasMessage = true;
+		} else if (STACK.equals(key)) {
+			hasStack = true;
+		} else if (THREAD.equals(key)) {
+			hasThread = true;
+		} else if (TIME.equals(key)) {
+			hasTime = true;
+		} else if (NAME.equals(key)) {
+			hasName = true;
+		} else if (WINDOW_ID.equals(key)) {
+			hasWindowId = true;
+		}
+	}
+	public boolean isHasQ() {
+		return hasQ;
+	}
+	public boolean isHasLevel() {
+		return hasLevel;
+	}
+	public boolean isHasMessage() {
+		return hasMessage;
+	}
+	public boolean isHasStack() {
+		return hasStack;
+	}
+	public boolean isHasThread() {
+		return hasThread;
+	}
+	public boolean isHasTime() {
+		return hasTime;
+	}
+	public boolean isHasName() {
+		return hasName;
+	}
+	public boolean isHasWindowId() {
+		return hasWindowId;
+	}
+	public void addMissingParameters() {
+		if (!hasLevel) {
+			append(LEVEL, DeferredLog.LOG_LEVEL_ALL);
+		}
+		if (!hasMessage) {
+			append(MESSAGE, "");
+		}
+		if (!hasStack) {
+			append(STACK, "");
+		}
+		if (!hasThread) {
+			append(THREAD, "");
+		}
+		if (!hasName) {
+			append(NAME, "");
+		}
+		if (!hasWindowId) {
+			append(WINDOW_ID, "");
+		}
+	}
 	public String toString(){
 		return sb.toString();
+	}
+	
+	public String toQueryString(){
+		String url = sb.toString();
+		if (hasQ) {
+			int start = url.indexOf("?") + 1;
+			if (url.length() > start) {
+				url = url.substring(start, url.length());
+			} else {
+				url = "";
+			}
+		}
+		return url;
 	}
 }
