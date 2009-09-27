@@ -23,6 +23,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	private I_Collection delegates = null;
 	private String logName;
 	private short level = I_LogDelegate.LOG_LEVEL_INFO;
+	private boolean enabled = true;
 	
 	public ProxyLog(Class c) {
 		if (c == null) {
@@ -41,8 +42,8 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	}
 	
 	public synchronized void addDelegate(I_LogDelegate p) {
-		if (LogPlatform.log) {
-			System.out.println("entering add delegate " + p + 
+		if (LogPlatform.isDebug()) {
+			LogPlatform.log("LogFactory","entering add delegate " + p + 
 					" in " + this + " for class " + logName);
 		}
 		if (p != null) {
@@ -78,10 +79,17 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 		if (isDebugEnabled()) {
 			if (delegates == null && single_delegate != null) {
 				single_delegate.log(I_LogDelegate.LOG_LEVEL_DEBUG, message, t);
+				if (LogPlatform.isDebug()) {
+					LogPlatform.log("LogFactory","sending to " + single_delegate );
+				}
 			} else if (delegates != null) {
 				I_Iterator it = delegates.getIterator();
+				
 				while (it.hasNext()) {
 					I_LogDelegate delegate = (I_LogDelegate) it.next();
+					if (LogPlatform.isDebug()) {
+						LogPlatform.log("LogFactory","sending to " + delegate );
+					}
 					delegate.log(I_LogDelegate.LOG_LEVEL_DEBUG, message, t);
 				}
 			} 
@@ -285,27 +293,32 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	}
 
 	public void log(short type, Object message, Throwable t) {
-		switch (type) {
-			case I_LogDelegate.LOG_LEVEL_TRACE:
-				this.trace(message, t);
-				break;
-			case I_LogDelegate.LOG_LEVEL_DEBUG:
-				this.debug(message, t);
-				break;
-			case I_LogDelegate.LOG_LEVEL_INFO:
-				this.info(message, t);
-				break;
-			case I_LogDelegate.LOG_LEVEL_WARN:
-				this.warn(message, t);
-				break;
-			case I_LogDelegate.LOG_LEVEL_ERROR:
-				this.error(message, t);
-				break;
-			case I_LogDelegate.LOG_LEVEL_FATAL:
-				this.fatal(message, t);
-				break;
+		if (LogPlatform.isDebug()) {
+			LogPlatform.log("LogFactory"," in log with type " + type +
+					" isEnabled " + isEnabled());
 		}
-		
+		if (isEnabled()) {
+			switch (type) {
+				case I_LogDelegate.LOG_LEVEL_TRACE:
+					this.trace(message, t);
+					break;
+				case I_LogDelegate.LOG_LEVEL_DEBUG:
+					this.debug(message, t);
+					break;
+				case I_LogDelegate.LOG_LEVEL_INFO:
+					this.info(message, t);
+					break;
+				case I_LogDelegate.LOG_LEVEL_WARN:
+					this.warn(message, t);
+					break;
+				case I_LogDelegate.LOG_LEVEL_ERROR:
+					this.error(message, t);
+					break;
+				case I_LogDelegate.LOG_LEVEL_FATAL:
+					this.fatal(message, t);
+					break;
+			}
+		}
 	}
 
 	public int hashCode() {
@@ -330,5 +343,23 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 		} else if (!logName.equals(other.logName))
 			return false;
 		return true;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("ProxyLog [name=");
+		sb.append(logName);
+		sb.append(",delegates=");
+		sb.append(this.delegates);
+		sb.append("]");
+		return sb.toString();
 	}
 }

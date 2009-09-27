@@ -6,6 +6,7 @@ import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
+import org.adligo.i.util.client.StringUtils;
 
 /**
  * this holds the properties which need to be used to init the 
@@ -30,7 +31,8 @@ public class LogPlatform implements I_Listener {
 	
 	private static final LogPlatform instance = new LogPlatform();
 	private static String logConfigName = null;
-	public static boolean log = false;
+	private static boolean debug = false;
+	private static boolean trace = false;
 	
 	private static I_Map props = null;
 	private static I_LogDispatcher dispatcher = null;
@@ -38,10 +40,10 @@ public class LogPlatform implements I_Listener {
 	private static boolean isInitLevelsSet = false;
 	
 	private static I_LogFactory customFactory = null;
-	
+	private static I_Formatter formatter;
 
 	public void onEvent(Event p) {
-		if (log) {
+		if (debug) {
 			System.out.println("entering onEvent in LogPlatform");
 		}
 		if (p.threwException()) {
@@ -51,7 +53,7 @@ public class LogPlatform implements I_Listener {
 				props = (I_Map) p.getValue();
 			}
 			if (!isInitLevelsSet) {
-				if (log) {
+				if (debug) {
 					System.out.println("property file looked like...");
 					I_Iterator it = props.getIterator();
 					while (it.hasNext()) {
@@ -61,6 +63,10 @@ public class LogPlatform implements I_Listener {
 					}
 				}
 				LogFactory.instance.setInitalLogLevels(props, customFactory);
+				String format = (String) props.get("format");
+				if (!StringUtils.isEmpty(format)) {
+					formatter.setFormatString(format);
+				}
 				isInitLevelsSet = true;
 			} else {
 				LogFactory.instance.resetLogLevels();
@@ -86,6 +92,7 @@ public class LogPlatform implements I_Listener {
 	 */
 	public synchronized static final void init(String pLogConfignName, I_LogFactory p) {
 		if (!isInit) {
+			formatter = new SimpleFormatter();
 			logConfigName = pLogConfignName;
 			PropertyFactory.get(logConfigName, instance);
 			customFactory = p;
@@ -145,5 +152,41 @@ public class LogPlatform implements I_Listener {
 		logConfigName = fileName;
 		PropertyFactory.get(logConfigName, instance);
 		//onEvent is called next through the callback
+	}
+
+	public synchronized static boolean isDebug() {
+		return debug;
+	}
+
+	public synchronized static void setDebug(boolean log) {
+		LogPlatform.debug = log;
+	}
+
+	public synchronized static boolean isTrace() {
+		return trace;
+	}
+
+	public synchronized static void setTrace(boolean trace) {
+		LogPlatform.trace = trace;
+	}
+	
+	public static void log(String clazz, String message) {
+		System.out.println(clazz + " due to LogPlatform.isDebug() " + message);
+	}
+	
+	public static void trace(String clazz, String message) {
+		System.err.println(clazz + " due to LogPlatform.isTrace() " + message);
+	}
+	public static void trace(String clazz, Exception message) {
+		System.err.println(clazz + " due to LogPlatform.trace ");
+		message.printStackTrace();
+	}
+	
+	public synchronized static I_Formatter getFormatter() {
+		return formatter;
+	}
+
+	public synchronized static void setFormatter(I_Formatter formatter) {
+		LogPlatform.formatter = formatter;
 	}
 }

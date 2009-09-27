@@ -42,8 +42,8 @@ public class LogFactory {
 		if (loggers == null) {
 			toRet = new DeferredLog(clazz);
 			Log current = (Log) preInitLoggers.get(toRet);
-			if (LogPlatform.log) {
-				System.out.println("toRet is " + toRet +
+			if (LogPlatform.isDebug()) {
+				LogPlatform.log("LogFactory","toRet is " + toRet +
 						" current is " + current);
 			}
 			if (current != null) {
@@ -85,8 +85,8 @@ public class LogFactory {
 		resetLevels(loggers, LogPlatform.getProps());
 		if (firstTime) {
 			I_Iterator it = DeferredLog.deferredMessages.getIterator();
-			if (LogPlatform.log) {
-				System.out.println("there are " + DeferredLog.deferredMessages.size() + 
+			if (LogPlatform.isDebug()) {
+				LogPlatform.log("LogFactory","there are " + DeferredLog.deferredMessages.size() + 
 						" deferred log messages.");
 			}
 			while (it.hasNext()) {
@@ -95,9 +95,10 @@ public class LogFactory {
 					DeferredLog el_log = (DeferredLog) loggers.get(message.getName());
 					if (el_log != null) {
 						el_log.consumeMessage(message);
-						if (LogPlatform.log) {
-							System.out.println("consuming log message " + message + 
-									" with log " + message.getName() + " at level " + message.getLevel());
+						if (LogPlatform.isDebug()) {
+							LogPlatform.log("LogFactory"," consuming log message " + message + 
+									" with log " + message.getName() + " at level " + message.getLevel() +
+									" el_log is at " + el_log.getLevel());
 						}
 					}
 				}
@@ -113,8 +114,8 @@ public class LogFactory {
 			I_LogMutant log = (I_LogMutant) loggers.get(key);
 			
 			log.setLogLevel(props);
-			if (LogPlatform.log) {
-				System.out.println("Log " + key + " is now at level " + log.getLevel());
+			if (LogPlatform.isDebug()) {
+				LogPlatform.log("LogFactory","Log " + key + " is now at level " + log.getLevel());
 			}
 		}
 	}	

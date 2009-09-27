@@ -13,6 +13,16 @@ package org.adligo.i.log.client;
  */
 public interface Log {
 
+	/**
+	 * this is for constant logs (public static final Log)
+	 * that need to be turned off from the LogDispatcher (or other impl code)
+	 * so that a StackOverflow can be obvoided
+	 * 
+	 * @return
+	 */
+	public boolean isEnabled();
+	
+	public void setEnabled(boolean p);
 
     // ----------------------------------------------------- Logging Properties
 

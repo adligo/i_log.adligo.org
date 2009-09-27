@@ -1,7 +1,5 @@
 package org.adligo.i.log.client.models;
 
-import java.io.Serializable;
-
 import org.adligo.i.util.client.ClassUtils;
 
 /**
@@ -11,10 +9,11 @@ import org.adligo.i.util.client.ClassUtils;
  * @author scott
  *
  */
-public class StringLogMessage extends LogMessage {
+public class StringLogMessage extends LogMessage implements I_LogMessage {
 	private String message;
 
-	public StringLogMessage(LogMessage p) {
+	
+	public StringLogMessage(I_LogMessage p) {
 		if (ClassUtils.typeOf(p, ObjectLogMessage.class)) {
 			Object om = p.getMessage();
 			if (om != null) {
@@ -23,10 +22,7 @@ public class StringLogMessage extends LogMessage {
 		} else {
 			this.message = ((StringLogMessage) p).getLogMessage();
 		}
-		super.setLevel(p.getLevel());
-		super.setThrowable(p.getThrowable());
-		super.setName(p.getName());
-		super.setWindowId(p.getWindowId());
+		LogMessage.copy(this, p);
 	}
 	
 	public StringLogMessage() {

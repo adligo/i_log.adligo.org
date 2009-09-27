@@ -122,7 +122,9 @@ public class DeferredLog extends ProxyLog {
 	}
 	
 	protected void consumeMessage(LogMessage p) {
-		super.log(p.getLevel(), p.getMessage(), p.getThrowable());
+		if (super.isEnabled()) {
+			super.log(p.getLevel(), p.getMessage(), p.getThrowable());
+		}
 	}
 	
 	public boolean isDebugEnabled() {

@@ -47,6 +47,10 @@ public class LogUrl {
 	 */
 	public static final String WINDOW_ID = "w";
 	/**
+	 * the client format string
+	 */
+	public static final String FORMAT = "fmt";
+	/**
 	 * for non cookie users
 	 * SET by the Dispatcher!
 	 */
@@ -125,6 +129,12 @@ public class LogUrl {
 	public LogUrl(LogMessage message) {
 		this.hasQ = false;
 		appendMessage(message);
+	}
+	
+	public LogUrl(LogMessage message, String formatString) {
+		this.hasQ = false;
+		appendMessage(message);
+		this.append(FORMAT, formatString);
 	}
 	
 	public void appendMessage(LogMessage message) {

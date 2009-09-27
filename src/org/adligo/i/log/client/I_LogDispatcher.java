@@ -1,5 +1,6 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.log.client.models.I_LogMessage;
 import org.adligo.i.log.client.models.LogMessage;
 
 /**
@@ -9,5 +10,5 @@ import org.adligo.i.log.client.models.LogMessage;
  *
  */
 public interface I_LogDispatcher {
-	public void dispatch(LogMessage message);
+	public void dispatch(I_LogMessage message);
 }

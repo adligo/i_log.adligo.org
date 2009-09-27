@@ -20,6 +20,7 @@ package org.adligo.i.log.client;
 
 
 import org.adligo.i.log.client.models.LogMessage;
+import org.adligo.i.log.client.models.LogMessageFactory;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.StringUtils;
@@ -40,15 +41,6 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      */
     static protected I_LogOutput out = new SystemErrOutput();
 
-	/** Include the instance name in the log message? */
-    static protected boolean showLogName = false;
-    /** Include the short name ( last component ) of the logger in the log
-     *  message. Defaults to true - otherwise we'll be lost in a flood of
-     *  messages without knowing who sends them.
-     */
-    static protected boolean showShortName = true;
-    /** Include the current time in the log message */
-    static protected boolean showDateTime = false;
 
 
 
@@ -97,6 +89,8 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     protected short currentLogLevel;
     /** The short name of this simple log instance */
     protected String shortLogName = null;
+    
+    private boolean enabled = true;
 
 
     // ------------------------------------------------------------ Constructor
@@ -190,32 +184,23 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      * @param t The exception whose stack trace should be logged
      */
     public void log(short type, Object message, Throwable t) {
-    	// Use a string buffer for better performance
+    	LogMessage logMessage = createLogMessage(type, message, t);
+    	
+        I_Formatter fmt = LogPlatform.getFormatter();
+        out.write(fmt.format(logMessage));
+    }
+    
+    public LogMessage createLogMessage(short type, Object message, Throwable t) {
+    	 
         StringBuffer buf = new StringBuffer();
-
-
+        SimpleLog.createLogMessage(message, t, buf);
         
-        // Append a readable representation of the log level
-        buf.append(LogMessage.getLevelString(type)); 
-
-        // Append the name of the log instance if so configured
-        if( showShortName) {
-            if( shortLogName==null ) {
-                // Cut all but the last component of the name for both styles
-                shortLogName = logName.substring(logName.lastIndexOf('.') + 1);
-                shortLogName =
-                    shortLogName.substring(shortLogName.lastIndexOf('/') + 1);
-            }
-            buf.append(String.valueOf(shortLogName)).append(" - ");
-        } else if(showLogName) {
-            buf.append(String.valueOf(logName)).append(" - ");
-        }
-
-        createLogMessage(message, t, buf);
-
-        // Print to the appropriate destination
-        out.write(buf.toString());
-
+        LogMessage logMessage = LogMessageFactory.createMessage(buf.toString());
+        logMessage.setLevel(type);
+        logMessage.setName(logName);
+        logMessage.setThrowable(t);
+        
+        return logMessage;
     }
 
     /**
@@ -528,7 +513,15 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     }
     
 
-    protected static I_LogOutput getOut() {
+    public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	protected static I_LogOutput getOut() {
 		return out;
 	}
 

@@ -3,7 +3,7 @@ package org.adligo.i.log.client.models;
 import org.adligo.i.log.client.I_LogDelegate;
 
 
-public abstract class LogMessage {
+public abstract class LogMessage implements I_LogMessage {
 	private String name = "";
 	protected String stackAsString = "";
 	private boolean filledStackAsString = false;
@@ -11,10 +11,7 @@ public abstract class LogMessage {
 	private Throwable throwable = null;
 	private short level = I_LogDelegate.LOG_LEVEL_INFO;
 	private Integer windowId;
-
-	protected LogMessage() {
-		
-	}
+	private String thread;
 	
 	public short getLevel() {
 		return level;
@@ -82,55 +79,46 @@ public abstract class LogMessage {
 		}
 	}
 	
+	public String getThread() {
+		return thread;
+	}
+
+	public void setThread(String thread) {
+		this.thread = thread;
+	}
+
+	
 	public abstract Object getMessage();
 	public abstract void setMessage(Object o);
 	
 	public static String getLevelString(short level) {
-		return getLevelString(level, true);
-	}
-	public static String getLevelString(short level, boolean forMessage) {
-		if (forMessage) {
-			switch (level) {
-				case I_LogDelegate.LOG_LEVEL_TRACE:
-					return "[TRACE] ";
-				case I_LogDelegate.LOG_LEVEL_DEBUG:
-					return "[DEBUG] ";
-				case I_LogDelegate.LOG_LEVEL_INFO:
-					return "[INFO] ";
-				case I_LogDelegate.LOG_LEVEL_WARN:
-					return "[WARN] ";
-				case I_LogDelegate.LOG_LEVEL_ERROR:
-					return "[ERROR] ";
-				case I_LogDelegate.LOG_LEVEL_FATAL:
-					return "[FATAL] ";
-				case I_LogDelegate.LOG_LEVEL_ALL:
-					return "[ALL] ";
-				case I_LogDelegate.LOG_LEVEL_OFF:
-					return "[OFF] ";
-				default:
-					return "[UNKNOWN_LEVEL] ";
-			}
-		} else {
-			switch (level) {
-				case I_LogDelegate.LOG_LEVEL_TRACE:
-					return "TRACE";
-				case I_LogDelegate.LOG_LEVEL_DEBUG:
-					return "DEBUG";
-				case I_LogDelegate.LOG_LEVEL_INFO:
-					return "INFO";
-				case I_LogDelegate.LOG_LEVEL_WARN:
-					return "WARN";
-				case I_LogDelegate.LOG_LEVEL_ERROR:
-					return "ERROR";
-				case I_LogDelegate.LOG_LEVEL_FATAL:
-					return "FATAL";
-				case I_LogDelegate.LOG_LEVEL_ALL:
-					return "ALL";
-				case I_LogDelegate.LOG_LEVEL_OFF:
-					return "OFF";
-				default:
-					return "UNKNOWN_LEVEL";
-			}
+		switch (level) {
+			case I_LogDelegate.LOG_LEVEL_TRACE:
+				return "TRACE";
+			case I_LogDelegate.LOG_LEVEL_DEBUG:
+				return "DEBUG";
+			case I_LogDelegate.LOG_LEVEL_INFO:
+				return "INFO";
+			case I_LogDelegate.LOG_LEVEL_WARN:
+				return "WARN";
+			case I_LogDelegate.LOG_LEVEL_ERROR:
+				return "ERROR";
+			case I_LogDelegate.LOG_LEVEL_FATAL:
+				return "FATAL";
+			case I_LogDelegate.LOG_LEVEL_ALL:
+				return "ALL";
+			case I_LogDelegate.LOG_LEVEL_OFF:
+				return "OFF";
+			default:
+				return "UNKNOWN_LEVEL";
 		}
+	}
+	
+	public static void copy(LogMessage target, I_LogMessage source) {
+		target.setLevel(source.getLevel());
+		target.setThrowable(source.getThrowable());
+		target.setName(source.getName());
+		target.setWindowId(source.getWindowId());
+		target.setThread(source.getThread());
 	}
 }
