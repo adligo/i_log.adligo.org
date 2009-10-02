@@ -22,7 +22,7 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 	protected I_LogDelegate single_delegate = null;
 	private I_Collection delegates = null;
 	private String logName;
-	private short level = I_LogDelegate.LOG_LEVEL_INFO;
+	private short level = I_LogDelegate.LOG_LEVEL_OFF;
 	private boolean enabled = true;
 	
 	public ProxyLog(Class c) {

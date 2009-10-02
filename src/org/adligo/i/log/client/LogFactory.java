@@ -36,8 +36,9 @@ public class LogFactory {
 	}
 	
 	public synchronized Log getLogInternal(String clazz) {
-		//System.out.println("getting log for " + clazz);
-		
+		if (LogPlatform.isDebug()) {
+			LogPlatform.log("LogFactory", " getLog(" + clazz + ")");
+		}
 		Log toRet;
 		if (loggers == null) {
 			toRet = new DeferredLog(clazz);
@@ -61,10 +62,16 @@ public class LogFactory {
 		return toRet;
 	}
 	public synchronized void resetLogLevels() {
+		if (LogPlatform.isDebug()) {
+			LogPlatform.log("LogFactory", " resetLogLevels()");
+		}
 		resetLevels(loggers, LogPlatform.getProps());
 	}
 	
 	public synchronized void setInitalLogLevels(I_Map props, I_LogFactory p) {
+		if (LogPlatform.isDebug()) {
+			LogPlatform.log("LogFactory", " setInitalLogLevels ");
+		}
 		if (loggers == null) {
 			firstTime = true;
 			loggers = MapFactory.create();
@@ -96,9 +103,9 @@ public class LogFactory {
 					if (el_log != null) {
 						el_log.consumeMessage(message);
 						if (LogPlatform.isDebug()) {
-							LogPlatform.log("LogFactory"," consuming log message " + message + 
-									" with log " + message.getName() + " at level " + message.getLevel() +
-									" el_log is at " + el_log.getLevel());
+							LogPlatform.log("LogFactory"," consuming log message \n" + message + 
+									" el_log is at; \n" + LogMessage.getLevelString(el_log.getLevel()) +
+									"\n");
 						}
 					}
 				}
@@ -109,13 +116,18 @@ public class LogFactory {
 	
 	private static void resetLevels(I_Map loggers, I_Map props) {
 		I_Iterator it = loggers.getIterator();
+		if (LogPlatform.isDebug()) {
+			LogPlatform.log("LogFactory","resetLevels there are " + loggers.size() + " loggers ");
+		}
+		
 		while (it.hasNext()) {
 			Object key = it.next();
 			I_LogMutant log = (I_LogMutant) loggers.get(key);
 			
 			log.setLogLevel(props);
 			if (LogPlatform.isDebug()) {
-				LogPlatform.log("LogFactory","Log " + key + " is now at level " + log.getLevel());
+				LogPlatform.log("LogFactory","Log " + key + " is now at level " + 
+						LogMessage.getLevelString(log.getLevel()));
 			}
 		}
 	}	

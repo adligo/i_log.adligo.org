@@ -51,31 +51,11 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     	if (props == null) {
     		return null;
     	}
+
     	String toRet = (String) props.get(name);
-    	if (toRet == null) {
-    		String longestMatch = null;
-    		I_Iterator it = props.keys();
-    		//spin through all of the keys trying to matchup a package name
-    		// to see if a package is getting its level set
-    		while (it.hasNext()) {
-    			String thisOne = (String) it.next();
-    			
-    			if (name.indexOf(thisOne) != -1) {
-    				//packages match
-    				if (longestMatch == null) {
-    					longestMatch = thisOne;
-    				} else {
-    					// com.adligo is overridden by com.adligo.i exc
-    					if (thisOne.length() >  longestMatch.length()) {
-    						longestMatch =  thisOne;
-    					}
-    				}
-    			}
-    		}
-    		if (longestMatch != null) {
-    			toRet = (String) props.get(longestMatch);
-    		}
-    	}
+    	if (LogPlatform.isDebug()) {
+			LogPlatform.log("SimpleLog", "getStringProperty(" + name + ") returns " + toRet);
+		}
         return toRet;
     }
 
@@ -120,7 +100,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
         int i = String.valueOf(tempName).lastIndexOf('.');
         while(null == lvl && i > -1) {
         	tempName = tempName.substring(0,i);
-            lvl = getStringProperty(props,systemPrefix + "log." + tempName);
+            lvl = getStringProperty(props, tempName);
             i = String.valueOf(tempName).lastIndexOf('.');
         }
 

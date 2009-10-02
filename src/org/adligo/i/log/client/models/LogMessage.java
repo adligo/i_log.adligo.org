@@ -1,6 +1,7 @@
 package org.adligo.i.log.client.models;
 
 import org.adligo.i.log.client.I_LogDelegate;
+import org.adligo.i.util.client.ClassUtils;
 
 
 public abstract class LogMessage implements I_LogMessage {
@@ -121,4 +122,19 @@ public abstract class LogMessage implements I_LogMessage {
 		target.setWindowId(source.getWindowId());
 		target.setThread(source.getThread());
 	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(ClassUtils.getClassShortName(LogMessage.class) );
+		sb.append(" [name=");
+		sb.append(name);
+		sb.append("\n,message=\n");
+		sb.append(getMessage());
+		sb.append("\n,level=");
+		sb.append(getLevelString());
+		sb.append("] ");
+		sb.append(name);
+		return sb.toString();
+	}
+	
 }

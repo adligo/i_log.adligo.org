@@ -84,9 +84,11 @@ public class SimpleFormatter implements I_Formatter {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < chars.length; i++) {
 			char c = chars[i];
+			/*
 			if (LogPlatform.isDebug()) {
 				LogPlatform.log("SimpleFormatter", " Character " + c + " had lead " + hadLead);
 			}
+			*/
 			if (c == FormatItem.LEAD_CHAR) {
 				if (sb.length() > 0) {
 					FormatItem fi = new FormatItem(FormatItem.STRING_TYPE, sb.toString());
@@ -159,9 +161,11 @@ public class SimpleFormatter implements I_Formatter {
 					}
 				}
 			} else {
+				/*
 				if (LogPlatform.isDebug()) {
 					LogPlatform.log("SimpleFormatter", "appending " + c);
 				}
+				*/
 				sb.append(c);
 			}
 			

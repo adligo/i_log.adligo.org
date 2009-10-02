@@ -1,6 +1,11 @@
 package org.adligo.i.log.client;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.Event;
+import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
@@ -51,6 +56,23 @@ public class LogPlatform implements I_Listener {
 		} else {
 			synchronized (LogPlatform.class) {
 				props = (I_Map) p.getValue();
+				I_Iterator it =  props.getIterator();
+				//remove item with #
+				I_Collection items = CollectionFactory.create();
+				while (it.hasNext()) {
+					items.add(it.next());
+				}
+				
+				it = items.getIterator();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					if (key.indexOf("#") != -1) {
+						if (debug) {
+							log("LogPlatform", " removing property " + key);
+						}
+						props.remove(key);
+					}
+				}
 			}
 			if (!isInitLevelsSet) {
 				if (debug) {
@@ -109,6 +131,12 @@ public class LogPlatform implements I_Listener {
 	 * @param pLogConfignName
 	 */
 	public static final void init(String pLogConfignName) {
+		logConfigName = pLogConfignName;
+		init();
+	}
+	
+	public static final void init(boolean p_debug) {
+		debug = p_debug;
 		init(getFileName());
 	}
 	
