@@ -1,11 +1,13 @@
 package org.adligo.i.log.client;
 
+import java.lang.Throwable;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.Event;
 import org.adligo.i.util.client.I_Collection;
+import org.adligo.i.util.client.I_Event;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
@@ -47,7 +49,7 @@ public class LogPlatform implements I_Listener {
 	private static I_LogFactory customFactory = null;
 	private static I_Formatter formatter;
 
-	public void onEvent(Event p) {
+	public void onEvent(I_Event p) {
 		if (debug) {
 			System.out.println("entering onEvent in LogPlatform");
 		}
