@@ -4,10 +4,11 @@ import org.adligo.i.log.client.I_LogDelegate;
 import org.adligo.i.log.client.LogFactory;
 import org.adligo.i.log.client.LogPlatform;
 import org.adligo.i.util.client.ClassUtils;
+import org.adligo.i.util.client.I_ThreadContainer;
 import org.adligo.i.util.client.I_ThreadPopulator;
 
 
-public abstract class LogMessage implements I_LogMessage {
+public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
 	private String name = "";
 	protected String stackAsString = "";
 	private boolean filledStackAsString = false;
