@@ -15,6 +15,7 @@ import org.adligo.i.util.client.I_ThreadPopulator;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
 import org.adligo.i.util.client.StringUtils;
+import org.adligo.i.util.client.ThreadPopulatorFactory;
 
 /**
  * this holds the properties which need to be used to init the 
@@ -50,7 +51,7 @@ public class LogPlatform implements I_Listener {
 	private static I_LogFactory customFactory = null;
 	private static I_Formatter formatter;
 	
-	private static I_ThreadPopulator threadPopulator;
+	private static I_ThreadPopulator threadPopulator = null;
 
 	public void onEvent(I_Event p) {
 		if (debug) {
@@ -123,6 +124,7 @@ public class LogPlatform implements I_Listener {
 			logConfigName = pLogConfignName;
 			PropertyFactory.get(logConfigName, instance);
 			customFactory = p;
+			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
 			isInit = true;
 		}
 	}
