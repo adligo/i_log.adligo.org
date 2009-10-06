@@ -11,6 +11,7 @@ import org.adligo.i.util.client.I_Event;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.I_ThreadPopulator;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
 import org.adligo.i.util.client.StringUtils;
@@ -48,6 +49,8 @@ public class LogPlatform implements I_Listener {
 	
 	private static I_LogFactory customFactory = null;
 	private static I_Formatter formatter;
+	
+	private static I_ThreadPopulator threadPopulator;
 
 	public void onEvent(I_Event p) {
 		if (debug) {
@@ -218,5 +221,13 @@ public class LogPlatform implements I_Listener {
 
 	public synchronized static void setFormatter(I_Formatter formatter) {
 		LogPlatform.formatter = formatter;
+	}
+
+	public static I_ThreadPopulator getThreadPopulator() {
+		return threadPopulator;
+	}
+
+	public synchronized static void setThreadPopulator(I_ThreadPopulator threadPopulator) {
+		LogPlatform.threadPopulator = threadPopulator;
 	}
 }

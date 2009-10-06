@@ -1,7 +1,10 @@
 package org.adligo.i.log.client.models;
 
 import org.adligo.i.log.client.I_LogDelegate;
+import org.adligo.i.log.client.LogFactory;
+import org.adligo.i.log.client.LogPlatform;
 import org.adligo.i.util.client.ClassUtils;
+import org.adligo.i.util.client.I_ThreadPopulator;
 
 
 public abstract class LogMessage implements I_LogMessage {
@@ -13,6 +16,13 @@ public abstract class LogMessage implements I_LogMessage {
 	private short level = I_LogDelegate.LOG_LEVEL_INFO;
 	private Integer windowId;
 	private String thread;
+	
+	public LogMessage() {
+		I_ThreadPopulator tp =  LogPlatform.getThreadPopulator();
+		if (tp != null) {
+			tp.populateThread(this);
+		}
+	}
 	
 	public short getLevel() {
 		return level;
