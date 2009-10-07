@@ -33,6 +33,12 @@ public class LogFactory  {
 	protected static boolean hasCustomFactory() {
 		return !(instance == DEFAULT_FACTORY);
 	}
+	/**
+	 * should only be used for static factory
+	 * init from logFactory= in adligo_log.properties file
+	 * 
+	 * @param fac
+	 */
 	protected static synchronized void setLogFactoryInstance(I_LogFactory fac) {
 		
 		if (LogPlatform.isDebug()) {
@@ -44,7 +50,7 @@ public class LogFactory  {
 		}
 		if (instance == DEFAULT_FACTORY) {
 			instance = fac;
-			
+			/*
 			if (fac.isStaticInit()) {
 				I_Collection preInitLogs = DEFAULT_FACTORY.getPreInitLogs();
 				instance.setInitalLogLevels(preInitLogs);
@@ -54,6 +60,7 @@ public class LogFactory  {
 				instance.sendPreInitMessages(deferredMessages);
 				deferredMessages.clear();
 			}
+			*/
 		} else {
 			System.err.println("You can only set the LogFactory once " +
 					"in a i_log runtime instance");

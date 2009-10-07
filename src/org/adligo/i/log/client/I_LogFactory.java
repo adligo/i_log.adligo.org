@@ -39,9 +39,11 @@ public interface I_LogFactory {
 	 * 
 	 * @param i_proxyLogs
 	 */
+	/*
 	public void setInitalLogLevels(I_Collection i_proxyLogs);
 	
 	public void sendPreInitMessages(I_Collection i_logMessages);
+	*/
 	
 	/**
 	 * this is the adligo_log.properties file 

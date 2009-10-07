@@ -1,17 +1,13 @@
 package org.adligo.i.log.client;
 
-import java.lang.Throwable;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.adligo.i.util.client.CollectionFactory;
-import org.adligo.i.util.client.Event;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Event;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.I_ThreadPopulator;
+import org.adligo.i.util.client.MapFactory;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
 import org.adligo.i.util.client.StringUtils;
@@ -38,6 +34,29 @@ public class LogPlatform implements I_Listener {
 	 */
 	public static final String NET_LOG_URL = "net_log_url";
 	
+	/**
+	 * this is a key for adligo_log.properties
+	 * that tells the LogPlatform what log factory to use
+	 * 
+	 * NOTE this was done after j2se, j2me and gwt log impls
+	 *    and currently only supports log4j and java.util.logging
+	 *    
+	 *    obviously you can't use log4j on gwt or j2me,
+	 *    but you can send those messages to a log servlet
+	 *    and have them log there over http
+	 *    
+	 *    exc.  
+	 *    read Samudra Gupta
+	 *    Logging in Java
+	 *    
+	 *    written before i_log
+	 *    
+	 */
+	public static final String LOG_FACTORY = "log_factory";
+	public static I_Map //<String, I_LogFactory>
+					logFactories = null;
+	
+	
 	private static final LogPlatform instance = new LogPlatform();
 	private static String logConfigName = null;
 	private static boolean debug = false;
@@ -52,22 +71,20 @@ public class LogPlatform implements I_Listener {
 	private static I_Formatter formatter;
 	
 	private static I_ThreadPopulator threadPopulator = null;
-
+	
 	public void onEvent(I_Event p) {
 		if (debug) {
 			System.out.println("entering onEvent in LogPlatform");
 		}
-		if (!LogFactory.hasCustomFactory()) {
-			if (customFactory != null) {
-				LogFactory.setLogFactoryInstance(customFactory);
-			}
-		}
+
 		if (p.threwException()) {
 			p.getException().printStackTrace();
 		} else {
 			synchronized (LogPlatform.class) {
 				props = (I_Map) p.getValue();
 				I_Iterator it =  props.getIterator();
+				
+				
 				//remove item with #
 				I_Collection items = CollectionFactory.create();
 				while (it.hasNext()) {
@@ -82,6 +99,19 @@ public class LogPlatform implements I_Listener {
 							log("LogPlatform", " removing property " + key);
 						}
 						props.remove(key);
+					}
+				}
+				
+				String logFactory = (String) props.get(LOG_FACTORY);
+				if ( !StringUtils.isEmpty(logFactory)) {
+					I_LogFactory fac = (I_LogFactory) getLogFactories().get(logFactory);
+					
+					System.out.println("LogPlatform setting log_factory " + 
+								logFactory + " instance " + fac);
+					if (fac != null) {
+						LogFactory.setLogFactoryInstance(fac);
+					} else {
+						throw new RuntimeException("log_factory is null!");
 					}
 				}
 			}
@@ -135,20 +165,24 @@ public class LogPlatform implements I_Listener {
 		}
 	}
 
+
 	/**
-	 * should be used when external party is 
-	 * responsible for the log configuration file
-	 * like log4j
+	 * this adds the ability to set a log_factory in adligo_log.properties
 	 * 
-	 * @param p
+	 * for instance if your using the i_log4log4j package
+	 * you can  
+	 *    LogPlatform.addLogFactoryClass(Log4jFactory.LOG_FACTORY_NAME,
+	 *						Log4jFactory.INSTANCE);
+	 *
+	 * 
+	 * @see adi_gwt_rpc_servlet 
+	 *  AdiGwtServletInit class for a example
+	 *  
+	 * 
 	 */
-	public synchronized static final void init(I_LogFactory p) {
-		if (!isInit) {
-			formatter = new SimpleFormatter();
-			customFactory = p;
-			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
-			LogFactory.setLogFactoryInstance(customFactory);
-			isInit = true;
+	public synchronized static final void addLogFactoryClass(String name, I_LogFactory p) {
+		if (name != null) {
+			getLogFactories().put(name, p);
 		}
 	}
 	
@@ -254,5 +288,12 @@ public class LogPlatform implements I_Listener {
 
 	public synchronized static void setThreadPopulator(I_ThreadPopulator threadPopulator) {
 		LogPlatform.threadPopulator = threadPopulator;
+	}
+	
+	private static I_Map getLogFactories() {
+		if (logFactories == null) {
+			logFactories = MapFactory.create();
+		}
+		return logFactories;
 	}
 }
