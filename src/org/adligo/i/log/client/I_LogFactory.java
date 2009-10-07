@@ -28,6 +28,13 @@ public interface I_LogFactory {
 	 * re read config file on disk
 	 */
 	public void resetLogLevels();
+	
+	/**
+	 * most impls are not GWT in particular
+	 * but log4j is
+	 * @return
+	 */
+	public boolean isStaticInit();
 	/**
 	 * 
 	 * @param i_proxyLogs
@@ -35,4 +42,13 @@ public interface I_LogFactory {
 	public void setInitalLogLevels(I_Collection i_proxyLogs);
 	
 	public void sendPreInitMessages(I_Collection i_logMessages);
+	
+	/**
+	 * this is the adligo_log.properties file 
+	 * or other log file name when its loaded by the 
+	 * Log Platform
+	 * @param props
+	 * @param p
+	 */
+	public void setInitalLogLevels(I_Map props, I_LogFactory p); 
 }

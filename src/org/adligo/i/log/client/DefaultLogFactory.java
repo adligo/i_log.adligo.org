@@ -137,5 +137,9 @@ public class DefaultLogFactory implements I_LogFactory {
 	public ArrayCollection getPreInitLogs() {
 		return preInitLoggers;
 	}
+
+	public boolean isStaticInit() {
+		return true;
+	}
 	
 }

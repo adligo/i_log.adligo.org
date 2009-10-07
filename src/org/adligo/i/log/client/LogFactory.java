@@ -1,11 +1,7 @@
 package org.adligo.i.log.client;
 
-import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.util.client.ArrayCollection;
 import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
-import org.adligo.i.util.client.MapFactory;
 
 /**
  * a ultra simple log factory for CLDC 2.0 usage
@@ -16,8 +12,8 @@ import org.adligo.i.util.client.MapFactory;
  *
  */
 public class LogFactory  {
-	private static final DefaultLogFactory defaultFactory = new DefaultLogFactory();
-	private static I_LogFactory instance = defaultFactory;
+	public static final DefaultLogFactory DEFAULT_FACTORY = new DefaultLogFactory();
+	private static I_LogFactory instance = DEFAULT_FACTORY;
 	
 	private LogFactory() {}
 	
@@ -35,7 +31,7 @@ public class LogFactory  {
 	}
 	
 	protected static boolean hasCustomFactory() {
-		return !(instance == defaultFactory);
+		return !(instance == DEFAULT_FACTORY);
 	}
 	protected static synchronized void setLogFactoryInstance(I_LogFactory fac) {
 		
@@ -46,16 +42,18 @@ public class LogFactory  {
 			// do nothing
 			return;
 		}
-		if (instance == defaultFactory) {
+		if (instance == DEFAULT_FACTORY) {
 			instance = fac;
-			I_Collection preInitLogs = defaultFactory.getPreInitLogs();
-			instance.setInitalLogLevels(preInitLogs);
-			preInitLogs.clear();
 			
-			I_Collection deferredMessages = DeferredLog.deferredMessages;
-			instance.sendPreInitMessages(deferredMessages);
-			deferredMessages.clear();
-			
+			if (fac.isStaticInit()) {
+				I_Collection preInitLogs = DEFAULT_FACTORY.getPreInitLogs();
+				instance.setInitalLogLevels(preInitLogs);
+				preInitLogs.clear();
+				
+				I_Collection deferredMessages = DeferredLog.deferredMessages;
+				instance.sendPreInitMessages(deferredMessages);
+				deferredMessages.clear();
+			}
 		} else {
 			System.err.println("You can only set the LogFactory once " +
 					"in a i_log runtime instance");
@@ -68,6 +66,6 @@ public class LogFactory  {
 	}
 	
 	protected static synchronized void setInitalLogLevels(I_Map props, I_LogFactory p) {
-		defaultFactory.setInitalLogLevels(props, p);
+		instance.setInitalLogLevels(props, p);
 	}
 }
