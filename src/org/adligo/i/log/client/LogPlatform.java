@@ -57,6 +57,11 @@ public class LogPlatform implements I_Listener {
 		if (debug) {
 			System.out.println("entering onEvent in LogPlatform");
 		}
+		if (!LogFactory.hasCustomFactory()) {
+			if (customFactory != null) {
+				LogFactory.setLogFactoryInstance(customFactory);
+			}
+		}
 		if (p.threwException()) {
 			p.getException().printStackTrace();
 		} else {
@@ -90,14 +95,14 @@ public class LogPlatform implements I_Listener {
 						System.out.println("" + key + "=" + value);
 					}
 				}
-				LogFactory.instance.setInitalLogLevels(props, customFactory);
+				LogFactory.setInitalLogLevels(props, customFactory);
 				String format = (String) props.get("format");
 				if (!StringUtils.isEmpty(format)) {
 					formatter.setFormatString(format);
 				}
 				isInitLevelsSet = true;
 			} else {
-				LogFactory.instance.resetLogLevels();
+				LogFactory.resetLogLevels();
 			}
 		}
 	}
@@ -125,10 +130,28 @@ public class LogPlatform implements I_Listener {
 			PropertyFactory.get(logConfigName, instance);
 			customFactory = p;
 			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
+			//wait for file return event to set the LogFactory
 			isInit = true;
 		}
 	}
 
+	/**
+	 * should be used when external party is 
+	 * responsible for the log configuration file
+	 * like log4j
+	 * 
+	 * @param p
+	 */
+	public synchronized static final void init(I_LogFactory p) {
+		if (!isInit) {
+			formatter = new SimpleFormatter();
+			customFactory = p;
+			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
+			LogFactory.setLogFactoryInstance(customFactory);
+			isInit = true;
+		}
+	}
+	
 	public synchronized static final void resetLevels(String pLogConfignName) {
 		logConfigName = pLogConfignName;
 		PropertyFactory.get(pLogConfignName, instance);

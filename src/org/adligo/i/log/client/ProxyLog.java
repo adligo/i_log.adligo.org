@@ -18,7 +18,7 @@ import org.adligo.i.util.client.I_Map;
  * @author scott
  *
  */
-public class ProxyLog  implements I_LogMutant, I_LogDelegate {
+public class ProxyLog  implements I_LogMutant, I_ProxyLog {
 	protected I_LogDelegate single_delegate = null;
 	private I_Collection delegates = null;
 	private String logName;
@@ -58,7 +58,6 @@ public class ProxyLog  implements I_LogMutant, I_LogDelegate {
 			}
 		}
 	}
-	
 	/**
 	 * returns a iterator of 
 	 * I_LogDelegates

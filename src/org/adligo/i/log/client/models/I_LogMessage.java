@@ -8,7 +8,9 @@ public interface I_LogMessage {
 	public Integer getWindowId();
 	public Object getMessage();
 	/**
-	 * note should be set in the dispatcher
+	 * note is set up by the I_ThreadPopulator set in the 
+	 * LogPlatform
+	 * 
 	 * @return
 	 */
 	public String getThread();

@@ -508,5 +508,15 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 	protected static void setOut(I_LogOutput out) {
 		SimpleLog.out = out;
 	}
+
+	public void addDelegate(I_LogDelegate p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public I_Iterator getDelegates() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 

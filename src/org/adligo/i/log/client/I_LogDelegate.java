@@ -1,6 +1,8 @@
 package org.adligo.i.log.client;
 
-public interface I_LogDelegate {
+import org.adligo.i.util.client.I_Iterator;
+
+public interface I_LogDelegate extends Log {
 	/** "Trace" level logging. */
 	public static final short LOG_LEVEL_TRACE  = 1;
 	/** "Debug" level logging. */
@@ -39,4 +41,6 @@ public interface I_LogDelegate {
      * @param t
      */
     public void log(short type, Object message, Throwable t);
+
+    
 }
