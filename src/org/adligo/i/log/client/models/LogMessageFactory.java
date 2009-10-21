@@ -6,7 +6,10 @@ public class LogMessageFactory {
 
 	public static LogMessage createMessage(Object message) {
 		LogMessage toRet;
-		if (ClassUtils.typeOf(message, String.class)) {
+		if (message == null) {
+			toRet = new StringLogMessage();
+			toRet.setMessage("");
+		} else if (ClassUtils.typeOf(message, String.class)) {
 			toRet = new StringLogMessage();
 			toRet.setMessage(message);
 		} else {
