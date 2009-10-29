@@ -8,6 +8,9 @@ import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.MapFactory;
 
 public class DefaultLogFactory implements I_LogFactory {
+	/**
+	 * collection of I_LogDelegates
+	 */
 	private ArrayCollection preInitLoggers = new ArrayCollection();
 	volatile private I_Map loggers;
 	volatile boolean firstTime = true;

@@ -6,6 +6,9 @@ import org.adligo.i.util.client.ArrayCollection;
 import org.adligo.i.util.client.I_Collection;
 
 public class DeferredLog extends ProxyLog {
+	/**
+	 * collection of LogMessages
+	 */
 	protected static I_Collection deferredMessages = new ArrayCollection();
 	
 	public DeferredLog(Class clazz) {

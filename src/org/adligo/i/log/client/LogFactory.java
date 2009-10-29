@@ -50,7 +50,6 @@ public class LogFactory  {
 		}
 		if (instance == DEFAULT_FACTORY) {
 			instance = fac;
-			/*
 			if (fac.isStaticInit()) {
 				I_Collection preInitLogs = DEFAULT_FACTORY.getPreInitLogs();
 				instance.setInitalLogLevels(preInitLogs);
@@ -60,7 +59,6 @@ public class LogFactory  {
 				instance.sendPreInitMessages(deferredMessages);
 				deferredMessages.clear();
 			}
-			*/
 		} else {
 			System.err.println("You can only set the LogFactory once " +
 					"in a i_log runtime instance");

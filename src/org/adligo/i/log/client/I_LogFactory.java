@@ -36,14 +36,25 @@ public interface I_LogFactory {
 	 */
 	public boolean isStaticInit();
 	/**
+	 * for static init logs (log4j and utilLog)
+	 * set the log levels for the I_LogDelegate's that were obtained
+	 * before the static init block was called
 	 * 
+	 * collection of ProxyLog
 	 * @param i_proxyLogs
 	 */
-	/*
 	public void setInitalLogLevels(I_Collection i_proxyLogs);
 	
+	/**
+	 * for static init logs (log4j and utilLog)
+	 * send the log messages that were logged before the
+	 * log delegates were set up
+	 * 
+	 * collection of LogMessages
+	 * 
+	 * @param i_logMessages
+	 */
 	public void sendPreInitMessages(I_Collection i_logMessages);
-	*/
 	
 	/**
 	 * this is the adligo_log.properties file 
