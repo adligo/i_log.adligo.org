@@ -1,6 +1,7 @@
 package org.adligo.i.log.client;
 
 import org.adligo.i.util.client.CollectionFactory;
+import org.adligo.i.util.client.Event;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Event;
 import org.adligo.i.util.client.I_Iterator;
@@ -10,6 +11,7 @@ import org.adligo.i.util.client.I_ThreadPopulator;
 import org.adligo.i.util.client.MapFactory;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
+import org.adligo.i.util.client.PropertyFileReadException;
 import org.adligo.i.util.client.StringUtils;
 import org.adligo.i.util.client.ThreadPopulatorFactory;
 
@@ -81,37 +83,42 @@ public class LogPlatform implements I_Listener {
 			p.getException().printStackTrace();
 		} else {
 			synchronized (LogPlatform.class) {
-				props = (I_Map) p.getValue();
-				I_Iterator it =  props.getIterator();
-				
-				
-				//remove item with #
-				I_Collection items = CollectionFactory.create();
-				while (it.hasNext()) {
-					items.add(it.next());
-				}
-				
-				it = items.getIterator();
-				while (it.hasNext()) {
-					String key = (String) it.next();
-					if (key.indexOf("#") != -1) {
-						if (debug) {
-							log("LogPlatform", " removing property " + key);
-						}
-						props.remove(key);
-					}
-				}
-				
-				String logFactory = (String) props.get(LOG_FACTORY);
-				if ( !StringUtils.isEmpty(logFactory)) {
-					I_LogFactory fac = (I_LogFactory) getLogFactories().get(logFactory);
+				Object value = p.getValue();
+				if (value instanceof PropertyFileReadException) {
+					((PropertyFileReadException) value).printStackTrace();
+				} else {
+					props = (I_Map) p.getValue();
+					I_Iterator it =  props.getIterator();
 					
-					System.out.println("LogPlatform setting log_factory " + 
-								logFactory + " instance " + fac);
-					if (fac != null) {
-						LogFactory.setLogFactoryInstance(fac);
-					} else {
-						throw new RuntimeException("log_factory is null!");
+					
+					//remove item with #
+					I_Collection items = CollectionFactory.create();
+					while (it.hasNext()) {
+						items.add(it.next());
+					}
+					
+					it = items.getIterator();
+					while (it.hasNext()) {
+						String key = (String) it.next();
+						if (key.indexOf("#") != -1) {
+							if (debug) {
+								log("LogPlatform", " removing property " + key);
+							}
+							props.remove(key);
+						}
+					}
+					
+					String logFactory = (String) props.get(LOG_FACTORY);
+					if ( !StringUtils.isEmpty(logFactory)) {
+						I_LogFactory fac = (I_LogFactory) getLogFactories().get(logFactory);
+						
+						System.out.println("LogPlatform setting log_factory " + 
+									logFactory + " instance " + fac);
+						if (fac != null) {
+							LogFactory.setLogFactoryInstance(fac);
+						} else {
+							throw new RuntimeException("log_factory is null!");
+						}
 					}
 				}
 			}

@@ -126,18 +126,18 @@ public class LogUrl {
 		appendMessage(message);
 	}
 	
-	public LogUrl(LogMessage message) {
+	public LogUrl(I_LogMessage message) {
 		this.hasQ = false;
 		appendMessage(message);
 	}
 	
-	public LogUrl(LogMessage message, String formatString) {
+	public LogUrl(I_LogMessage message, String formatString) {
 		this.hasQ = false;
 		appendMessage(message);
 		this.append(FORMAT, formatString);
 	}
 	
-	public void appendMessage(LogMessage message) {
+	public void appendMessage(I_LogMessage message) {
 		StringLogMessage m = new StringLogMessage(message);
 		this.append(LEVEL, m.getLevel());
 		this.append(NAME, m.getName());

@@ -173,7 +173,7 @@ public class SimpleFormatter implements I_Formatter {
 		
 	}
 
-	I_Iterator getItems() {
+	protected I_Iterator getItems() {
 		return items.getIterator();
 	}
 }
