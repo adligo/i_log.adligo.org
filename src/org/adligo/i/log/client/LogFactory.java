@@ -73,4 +73,9 @@ public class LogFactory  {
 	protected static synchronized void setInitalLogLevels(I_Map props, I_LogFactory p) {
 		instance.setInitalLogLevels(props, p);
 	}
+
+
+	protected static I_LogFactory getInstance() {
+		return instance;
+	}
 }
