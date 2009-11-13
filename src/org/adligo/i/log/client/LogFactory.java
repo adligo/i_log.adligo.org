@@ -75,7 +75,7 @@ public class LogFactory  {
 	}
 
 
-	protected static I_LogFactory getInstance() {
+	public static I_LogFactory getInstance() {
 		return instance;
 	}
 }
