@@ -7,12 +7,14 @@ import org.adligo.i.util.client.I_Event;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.I_SystemOutput;
 import org.adligo.i.util.client.I_ThreadPopulator;
 import org.adligo.i.util.client.MapFactory;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
 import org.adligo.i.util.client.PropertyFileReadException;
 import org.adligo.i.util.client.StringUtils;
+import org.adligo.i.util.client.SystemOutput;
 import org.adligo.i.util.client.ThreadPopulatorFactory;
 
 /**
@@ -66,13 +68,14 @@ public class LogPlatform implements I_Listener {
 	
 	private static I_Map props = null;
 	private static I_LogDispatcher dispatcher = null;
-	private static boolean isInit = false;
+	protected static boolean isInit = false;
 	private static boolean isInitLevelsSet = false;
 	
 	private static I_LogFactory customFactory = null;
 	private static I_Formatter formatter;
 	
 	private static I_ThreadPopulator threadPopulator = null;
+	private static I_SystemOutput out = SystemOutput.INSTANCE;
 	
 	public void onEvent(I_Event p) {
 		if (debug) {
@@ -85,7 +88,7 @@ public class LogPlatform implements I_Listener {
 			synchronized (LogPlatform.class) {
 				Object value = p.getValue();
 				if (value instanceof PropertyFileReadException) {
-					((PropertyFileReadException) value).printStackTrace();
+					out.exception((PropertyFileReadException) value);
 				} else {
 					props = (I_Map) p.getValue();
 					I_Iterator it =  props.getIterator();
@@ -117,7 +120,9 @@ public class LogPlatform implements I_Listener {
 						if (fac != null) {
 							LogFactory.setLogFactoryInstance(fac);
 						} else {
-							throw new RuntimeException("log_factory is null!");
+							throw new RuntimeException("log_factory is null, because your code" +
+									" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
+									" with a valid instance of your logFactory " + logFactory + "!");
 						}
 					}
 				}
@@ -169,6 +174,8 @@ public class LogPlatform implements I_Listener {
 			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
 			//wait for file return event to set the LogFactory
 			isInit = true;
+		} else {
+			throw new RuntimeException("LogPlatform has already been initialized.");
 		}
 	}
 
@@ -202,21 +209,40 @@ public class LogPlatform implements I_Listener {
 	 * @param pLogConfignName
 	 */
 	public static final void init(String pLogConfignName) {
+		checkInit();
 		logConfigName = pLogConfignName;
 		init();
 	}
 	
 	public static final void init(boolean p_debug) {
+		checkInit();
 		debug = p_debug;
 		init(getFileName());
 	}
 	
 	public static final void init() {
+		checkInit();
 		init(getFileName(), null);
 	}
 	
+	private static void checkInit() {
+		if (!Platform.isInit()) {
+			throw new RuntimeException("Please initalize your platform BEFORE the LogPlatform," +
+					" for instance J2SEPlatform.init(), GWTPlatform.init(), J2MEPlatform.init. ");
+		}
+	}
 	private static String getFileName() {
-		if (Platform.getPlatform() == Platform.GWT) {
+		if (logConfigName != null) {
+			if (Platform.getPlatform() == Platform.GWT) {
+				return logConfigName;
+			} else  {
+				if (logConfigName.startsWith("/")) {
+					return logConfigName;
+				} else {
+					return "/" + logConfigName;
+				}
+			}
+		} else if (Platform.getPlatform() == Platform.GWT) {
 			return "adligo_log.properties";
 		} else {
 			return "/adligo_log.properties";
@@ -303,4 +329,17 @@ public class LogPlatform implements I_Listener {
 		}
 		return logFactories;
 	}
+
+	protected static I_SystemOutput getOut() {
+		return out;
+	}
+
+	protected static void setOut(I_SystemOutput out) {
+		LogPlatform.out = out;
+	}
+	
+	public static boolean isInit() {
+		return isInit;
+	}
+	
 }

@@ -23,7 +23,9 @@ import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.log.client.models.LogMessageFactory;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.I_SystemOutput;
 import org.adligo.i.util.client.StringUtils;
+import org.adligo.i.util.client.SystemOutput;
 
 /**
  * 
@@ -39,7 +41,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     /**
      * redirect output for testing
      */
-    static protected I_LogOutput out = new SystemErrOutput();
+    static protected I_SystemOutput out = SystemOutput.INSTANCE;
 
 
 
@@ -167,7 +169,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     	LogMessage logMessage = createLogMessage(type, message, t);
     	
         I_Formatter fmt = LogPlatform.getFormatter();
-        out.write(fmt.format(logMessage));
+        out.out(fmt.format(logMessage));
     }
     
     public LogMessage createLogMessage(short type, Object message, Throwable t) {
@@ -501,12 +503,9 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 		this.enabled = enabled;
 	}
 
-	protected static I_LogOutput getOut() {
-		return out;
-	}
 
-	protected static void setOut(I_LogOutput out) {
-		SimpleLog.out = out;
+	protected static void setOut(I_SystemOutput p_out) {
+		out = p_out;
 	}
 
 	public void addDelegate(I_LogDelegate p) {
