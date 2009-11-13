@@ -69,7 +69,7 @@ public class LogPlatform implements I_Listener {
 	private static I_Map props = null;
 	private static I_LogDispatcher dispatcher = null;
 	protected static boolean isInit = false;
-	private static boolean isInitLevelsSet = false;
+	protected static boolean isInitLevelsSet = false;
 	
 	private static I_LogFactory customFactory = null;
 	private static I_Formatter formatter;

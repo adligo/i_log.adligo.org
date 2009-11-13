@@ -15,7 +15,7 @@ public class LogFactory  {
 	public static final DefaultLogFactory DEFAULT_FACTORY = new DefaultLogFactory();
 	private static I_LogFactory instance = DEFAULT_FACTORY;
 	
-	private LogFactory() {}
+	protected LogFactory() {}
 	
 	
 	public static synchronized Log getLog(Class clazz) {
@@ -77,5 +77,9 @@ public class LogFactory  {
 
 	public static I_LogFactory getInstance() {
 		return instance;
+	}
+	
+	protected static void clearLogFactoryInstance() {
+		instance= DEFAULT_FACTORY;
 	}
 }
