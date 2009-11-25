@@ -12,8 +12,8 @@ public class DefaultLogFactory implements I_LogFactory {
 	 * collection of I_LogDelegates
 	 */
 	private ArrayCollection preInitLoggers = new ArrayCollection();
-	volatile private I_Map loggers;
-	volatile boolean firstTime = true;
+	protected static volatile I_Map loggers;
+	protected static volatile boolean firstTime = true;
 	
 	
 	public I_LogDelegate getLog(Class clazz) {

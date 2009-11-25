@@ -12,7 +12,7 @@ import org.adligo.i.util.client.I_Map;
  *
  */
 public class LogFactory  {
-	public static final DefaultLogFactory DEFAULT_FACTORY = new DefaultLogFactory();
+	private static final DefaultLogFactory DEFAULT_FACTORY = new DefaultLogFactory();
 	private static I_LogFactory instance = DEFAULT_FACTORY;
 	
 	protected LogFactory() {}
