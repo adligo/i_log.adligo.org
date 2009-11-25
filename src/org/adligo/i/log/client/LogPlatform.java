@@ -61,7 +61,7 @@ public class LogPlatform implements I_Listener {
 					logFactories = null;
 	
 	
-	private static final LogPlatform instance = new LogPlatform();
+	protected static final LogPlatform instance = new LogPlatform();
 	private static String logConfigName = null;
 	private static boolean debug = false;
 	private static boolean trace = false;
@@ -95,7 +95,6 @@ public class LogPlatform implements I_Listener {
 			} else {
 				out.exception(p.getException());
 			}
-			return;
 		} 
 		synchronized (LogPlatform.class) {
 			I_Iterator it =  props.getIterator();
@@ -175,8 +174,8 @@ public class LogPlatform implements I_Listener {
 		if (!isInit) {
 			formatter = new SimpleFormatter();
 			logConfigName = pLogConfignName;
-			PropertyFactory.get(logConfigName, instance);
 			customFactory = p;
+			PropertyFactory.get(logConfigName, instance);
 			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
 			//wait for file return event to set the LogFactory
 			isInit = true;
