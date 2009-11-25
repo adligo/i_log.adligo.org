@@ -144,11 +144,11 @@ public class LogPlatform implements I_Listener {
 					System.out.println("" + key + "=" + value);
 				}
 			}
-			LogFactory.setInitalLogLevels(props, customFactory);
 			String format = (String) props.get("format");
 			if (!StringUtils.isEmpty(format)) {
 				formatter.setFormatString(format);
 			}
+			LogFactory.setInitalLogLevels(props, customFactory);
 			isInitLevelsSet = true;
 		} else {
 			LogFactory.resetLogLevels();

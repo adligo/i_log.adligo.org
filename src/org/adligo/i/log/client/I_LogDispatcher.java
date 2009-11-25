@@ -4,8 +4,9 @@ import org.adligo.i.log.client.models.I_LogMessage;
 import org.adligo.i.log.client.models.LogMessage;
 
 /**
- * note that the actual implementaion may 
- * batch up requests into a single 
+ * note that the actual impl. may 
+ * batch up requests for remote send 
+ * 
  * @author scott
  *
  */
