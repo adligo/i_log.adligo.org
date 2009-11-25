@@ -82,14 +82,22 @@ public class LogPlatform implements I_Listener {
 			System.out.println("entering onEvent in LogPlatform");
 		}
 
+		Object value = p.getValue();
+		props = (I_Map) p.getValue();
 		if (p.threwException()) {
-			out.exception((PropertyFileReadException) p.getException());
+			Throwable ex = p.getException();
+			if (ex instanceof PropertyFileReadException) {
+				PropertyFileReadException pfre = (PropertyFileReadException) ex;
+				out.err("error reading file '" + pfre.getFileName() + "' system file '" +
+						pfre.getAttemptedSystemFileName() + "' using defaults;");
+				props = getDefaults();
+				out.err("using defaults " + props);
+			} else {
+				out.exception(p.getException());
+			}
 			return;
 		} 
 		synchronized (LogPlatform.class) {
-			Object value = p.getValue();
-			
-			props = (I_Map) p.getValue();
 			I_Iterator it =  props.getIterator();
 			
 			
@@ -119,9 +127,11 @@ public class LogPlatform implements I_Listener {
 				if (fac != null) {
 					LogFactory.setLogFactoryInstance(fac);
 				} else {
-					throw new RuntimeException("log_factory is null, because your code" +
+					Exception ex =  new Exception("log_factory is null, because your code" +
 							" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
 							" with a valid instance of your logFactory " + logFactory + "!");
+					ex.fillInStackTrace();
+					out.exception(ex);
 				}
 			}
 		}
@@ -131,7 +141,6 @@ public class LogPlatform implements I_Listener {
 				I_Iterator it = props.getIterator();
 				while (it.hasNext()) {
 					Object key = it.next();
-					Object value = props.get(key);
 					System.out.println("" + key + "=" + value);
 				}
 			}
@@ -339,4 +348,10 @@ public class LogPlatform implements I_Listener {
 		return isInit;
 	}
 	
+	public I_Map getDefaults() {
+		I_Map map = MapFactory.create();
+		map.put("defaultlog", "INFO");
+		map.put("gwt_loggers", "simple");
+		return map;
+	}
 }
