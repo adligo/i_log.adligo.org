@@ -83,69 +83,66 @@ public class LogPlatform implements I_Listener {
 		}
 
 		if (p.threwException()) {
-			p.getException().printStackTrace();
-		} else {
-			synchronized (LogPlatform.class) {
-				Object value = p.getValue();
-				if (value instanceof PropertyFileReadException) {
-					out.exception((PropertyFileReadException) value);
+			out.exception((PropertyFileReadException) p.getException());
+			return;
+		} 
+		synchronized (LogPlatform.class) {
+			Object value = p.getValue();
+			
+			props = (I_Map) p.getValue();
+			I_Iterator it =  props.getIterator();
+			
+			
+			//remove item with #
+			I_Collection items = CollectionFactory.create();
+			while (it.hasNext()) {
+				items.add(it.next());
+			}
+			
+			it = items.getIterator();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				if (key.indexOf("#") != -1) {
+					if (debug) {
+						log("LogPlatform", " removing property " + key);
+					}
+					props.remove(key);
+				}
+			}
+			
+			String logFactory = (String) props.get(LOG_FACTORY);
+			if ( !StringUtils.isEmpty(logFactory)) {
+				I_LogFactory fac = (I_LogFactory) getLogFactories().get(logFactory);
+				
+				System.out.println("LogPlatform setting log_factory " + 
+							logFactory + " instance " + fac);
+				if (fac != null) {
+					LogFactory.setLogFactoryInstance(fac);
 				} else {
-					props = (I_Map) p.getValue();
-					I_Iterator it =  props.getIterator();
-					
-					
-					//remove item with #
-					I_Collection items = CollectionFactory.create();
-					while (it.hasNext()) {
-						items.add(it.next());
-					}
-					
-					it = items.getIterator();
-					while (it.hasNext()) {
-						String key = (String) it.next();
-						if (key.indexOf("#") != -1) {
-							if (debug) {
-								log("LogPlatform", " removing property " + key);
-							}
-							props.remove(key);
-						}
-					}
-					
-					String logFactory = (String) props.get(LOG_FACTORY);
-					if ( !StringUtils.isEmpty(logFactory)) {
-						I_LogFactory fac = (I_LogFactory) getLogFactories().get(logFactory);
-						
-						System.out.println("LogPlatform setting log_factory " + 
-									logFactory + " instance " + fac);
-						if (fac != null) {
-							LogFactory.setLogFactoryInstance(fac);
-						} else {
-							throw new RuntimeException("log_factory is null, because your code" +
-									" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
-									" with a valid instance of your logFactory " + logFactory + "!");
-						}
-					}
+					throw new RuntimeException("log_factory is null, because your code" +
+							" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
+							" with a valid instance of your logFactory " + logFactory + "!");
 				}
 			}
-			if (!isInitLevelsSet) {
-				if (debug) {
-					System.out.println("property file looked like...");
-					I_Iterator it = props.getIterator();
-					while (it.hasNext()) {
-						Object key = it.next();
-						Object value = props.get(key);
-						System.out.println("" + key + "=" + value);
-					}
+		}
+		if (!isInitLevelsSet) {
+			if (debug) {
+				System.out.println("property file looked like...");
+				I_Iterator it = props.getIterator();
+				while (it.hasNext()) {
+					Object key = it.next();
+					Object value = props.get(key);
+					System.out.println("" + key + "=" + value);
 				}
-				LogFactory.setInitalLogLevels(props, customFactory);
-				String format = (String) props.get("format");
-				if (!StringUtils.isEmpty(format)) {
-					formatter.setFormatString(format);
-				}
-				isInitLevelsSet = true;
-			} else {
-				LogFactory.resetLogLevels();
 			}
+			LogFactory.setInitalLogLevels(props, customFactory);
+			String format = (String) props.get("format");
+			if (!StringUtils.isEmpty(format)) {
+				formatter.setFormatString(format);
+			}
+			isInitLevelsSet = true;
+		} else {
+			LogFactory.resetLogLevels();
 		}
 	}
 
