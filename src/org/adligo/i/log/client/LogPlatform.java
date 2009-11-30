@@ -99,23 +99,7 @@ public class LogPlatform implements I_Listener {
 		synchronized (LogPlatform.class) {
 			I_Iterator it =  props.getIterator();
 			
-			
-			//remove item with #
-			I_Collection items = CollectionFactory.create();
-			while (it.hasNext()) {
-				items.add(it.next());
-			}
-			
-			it = items.getIterator();
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				if (key.indexOf("#") != -1) {
-					if (debug) {
-						log("LogPlatform", " removing property " + key);
-					}
-					props.remove(key);
-				}
-			}
+			removeCommentLines(it);
 			
 			String logFactory = (String) props.get(LOG_FACTORY);
 			if ( !StringUtils.isEmpty(logFactory)) {
@@ -151,6 +135,25 @@ public class LogPlatform implements I_Listener {
 			isInitLevelsSet = true;
 		} else {
 			LogFactory.resetLogLevels();
+		}
+	}
+
+	private void removeCommentLines(I_Iterator it) {
+		//remove item with #
+		I_Collection items = CollectionFactory.create();
+		while (it.hasNext()) {
+			items.add(it.next());
+		}
+		
+		it = items.getIterator();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			if (key.indexOf("#") != -1) {
+				if (debug) {
+					log("LogPlatform", " removing property " + key);
+				}
+				props.remove(key);
+			}
 		}
 	}
 
