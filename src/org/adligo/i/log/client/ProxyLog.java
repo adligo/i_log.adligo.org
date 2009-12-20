@@ -321,11 +321,10 @@ public class ProxyLog  implements I_LogMutant, I_ProxyLog {
 	}
 
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((logName == null) ? 0 : logName.hashCode());
-		return result;
+		if (logName == null) {
+			return 0;
+		}
+		return logName.hashCode();
 	}
 
 	public boolean equals(Object obj) {

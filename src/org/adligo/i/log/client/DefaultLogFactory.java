@@ -2,6 +2,7 @@ package org.adligo.i.log.client;
 
 import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.util.client.ArrayCollection;
+import org.adligo.i.util.client.HashCollection;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
@@ -11,7 +12,7 @@ public class DefaultLogFactory implements I_LogFactory {
 	/**
 	 * collection of I_LogDelegates
 	 */
-	protected static ArrayCollection preInitLoggers = new ArrayCollection();
+	protected static HashCollection preInitLoggers = new HashCollection();
 	protected static volatile I_Map loggers;
 	protected static volatile boolean firstTime = true;
 	
@@ -36,15 +37,15 @@ public class DefaultLogFactory implements I_LogFactory {
 		}
 		I_LogDelegate toRet;
 		if (loggers == null) {
-			toRet = new DeferredLog(clazz);
-			I_LogDelegate current = (I_LogDelegate) preInitLoggers.get(toRet);
+			
+			I_LogDelegate current = (I_LogDelegate) preInitLoggers.get(clazz.hashCode());
 			if (LogPlatform.isDebug()) {
-				LogPlatform.log("LogFactory","toRet is " + toRet +
-						" current is " + current);
+				LogPlatform.log("LogFactory"," current is " + current);
 			}
 			if (current != null) {
 				toRet = current;
 			} else {
+				toRet = new DeferredLog(clazz);
 				preInitLoggers.add(toRet);
 			}
 		} else {
@@ -134,10 +135,11 @@ public class DefaultLogFactory implements I_LogFactory {
 				}
 			}
 		}
+		iLogMessages.clear();
 		firstTime = false;
 	}	
 	
-	public ArrayCollection getPreInitLogs() {
+	public HashCollection getPreInitLogs() {
 		return preInitLoggers;
 	}
 
