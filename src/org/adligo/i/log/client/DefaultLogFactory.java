@@ -38,7 +38,7 @@ public class DefaultLogFactory implements I_LogFactory {
 		I_LogDelegate toRet;
 		if (loggers == null) {
 			
-			I_LogDelegate current = (I_LogDelegate) preInitLoggers.get(clazz.hashCode());
+			I_LogDelegate current = (I_LogDelegate) preInitLoggers.get(new LogLookup(clazz));
 			if (LogPlatform.isDebug()) {
 				LogPlatform.log("LogFactory"," current is " + current);
 			}

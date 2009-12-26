@@ -177,4 +177,5 @@ public class DeferredLog extends ProxyLog {
 			return super.isWarnEnabled();
 		}
 	}
+	
 }

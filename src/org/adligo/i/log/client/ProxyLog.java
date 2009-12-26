@@ -18,7 +18,7 @@ import org.adligo.i.util.client.I_Map;
  * @author scott
  *
  */
-public class ProxyLog  implements I_LogMutant, I_ProxyLog {
+public class ProxyLog  implements I_LogMutant, I_ProxyLog, I_Log {
 	protected I_LogDelegate single_delegate = null;
 	private I_Collection delegates = null;
 	private String logName;
@@ -332,13 +332,20 @@ public class ProxyLog  implements I_LogMutant, I_ProxyLog {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProxyLog other = (ProxyLog) obj;
+		if (getClass() == obj.getClass()) {
+			return equals2((I_Log) obj);
+		}
+		if (obj instanceof I_Log) {
+			return equals2((I_Log) obj);
+		}
+		return false;
+	}
+
+	private boolean equals2(I_Log obj) {
 		if (logName == null) {
-			if (other.logName != null)
+			if (obj.getLogName() != null)
 				return false;
-		} else if (!logName.equals(other.logName))
+		} else if (!logName.equals(obj.getLogName()))
 			return false;
 		return true;
 	}
