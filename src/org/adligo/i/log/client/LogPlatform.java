@@ -9,6 +9,7 @@ import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.I_SystemOutput;
 import org.adligo.i.util.client.I_ThreadPopulator;
+import org.adligo.i.util.client.InstanceForName;
 import org.adligo.i.util.client.MapFactory;
 import org.adligo.i.util.client.Platform;
 import org.adligo.i.util.client.PropertyFactory;
@@ -57,8 +58,6 @@ public class LogPlatform implements I_Listener {
 	 *    
 	 */
 	public static final String LOG_FACTORY = "log_factory";
-	public static I_Map //<String, I_LogFactory>
-					logFactories = null;
 	
 	
 	protected static final LogPlatform instance = new LogPlatform();
@@ -103,18 +102,30 @@ public class LogPlatform implements I_Listener {
 			
 			String logFactory = (String) props.get(LOG_FACTORY);
 			if ( !StringUtils.isEmpty(logFactory)) {
-				I_LogFactory fac = (I_LogFactory) getLogFactories().get(logFactory);
 				
-				System.out.println("LogPlatform setting log_factory " + 
-							logFactory + " instance " + fac);
-				if (fac != null) {
-					LogFactory.setLogFactoryInstance(fac);
-				} else {
-					Exception ex =  new Exception("log_factory is null, because your code" +
-							" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
-							" with a valid instance of your logFactory " + logFactory + "!");
-					ex.fillInStackTrace();
-					out.exception(ex);
+					
+				switch (Platform.getPlatform()) {
+					case Platform.GWT:
+						out.err("LogPlatform can't set dynamic log_factory from adligo_log.properties on GWT," +
+								" you must use the org.adligo.gwt.util.client.GwtLogFactory class instead. ");
+						break;
+					case Platform.JME:
+						out.err("LogPlatform can't set dynamic log_factory from adligo_log.properties on J2ME.");
+						break;
+					case Platform.JSE:
+							I_LogFactory fac = (I_LogFactory) InstanceForName.create(logFactory);
+							out.err("LogPlatform setting log_factory " + 
+									logFactory + " instance " + fac);
+							if (fac != null) {
+								LogFactory.setLogFactoryInstance(fac);
+							} else {
+								Exception ex =  new Exception("log_factory is null, because your code" +
+										" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
+										" with a valid instance of your logFactory " + logFactory + "!");
+								ex.fillInStackTrace();
+								out.exception(ex);
+							}
+							break;
 				}
 			}
 		}
@@ -187,27 +198,6 @@ public class LogPlatform implements I_Listener {
 		}
 	}
 
-
-	/**
-	 * this adds the ability to set a log_factory in adligo_log.properties
-	 * 
-	 * for instance if your using the i_log4log4j package
-	 * you can  
-	 *    LogPlatform.addLogFactoryClass(Log4jFactory.LOG_FACTORY_NAME,
-	 *						Log4jFactory.INSTANCE);
-	 *
-	 * 
-	 * @see adi_gwt_rpc_servlet 
-	 *  AdiGwtServletInit class for a example
-	 *  
-	 * 
-	 */
-	public synchronized static final void addLogFactoryClass(String name, I_LogFactory p) {
-		if (name != null) {
-			getLogFactories().put(name, p);
-		}
-	}
-	
 	public synchronized static final void resetLevels(String pLogConfignName) {
 		logConfigName = pLogConfignName;
 		PropertyFactory.get(pLogConfignName, instance);
@@ -331,12 +321,6 @@ public class LogPlatform implements I_Listener {
 		LogPlatform.threadPopulator = threadPopulator;
 	}
 	
-	private static I_Map getLogFactories() {
-		if (logFactories == null) {
-			logFactories = MapFactory.create();
-		}
-		return logFactories;
-	}
 
 	protected static I_SystemOutput getOut() {
 		return out;
