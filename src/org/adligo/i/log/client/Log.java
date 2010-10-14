@@ -202,4 +202,11 @@ public interface Log {
      * @param t log this cause
      */
     public void fatal(Object message, Throwable t);
+    
+    /**
+     * returns one of the shorts from I_LogDelegate
+     * that pertains to if this log is Debug, Warn exc
+     * @return
+     */
+    public short getLevel();
 }
