@@ -226,7 +226,7 @@ public class LogPlatform implements I_Listener {
 	private static void checkInit() {
 		if (!Platform.isInit()) {
 			throw new RuntimeException("Please initalize your platform BEFORE the LogPlatform," +
-					" for instance J2SEPlatform.init(), GWTPlatform.init(), J2MEPlatform.init. ");
+					" for instance JSEPlatform.init(), GWTPlatform.init(), J2MEPlatform.init. ");
 		}
 	}
 	private static String getFileName() {
