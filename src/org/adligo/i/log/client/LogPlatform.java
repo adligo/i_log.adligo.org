@@ -85,13 +85,13 @@ public class LogPlatform implements I_Listener {
 		props = (I_Map) p.getValue();
 		if (p.threwException()) {
 			Throwable ex = p.getException();
-			if (ex instanceof PropertyFileReadException) {
+			try {
 				PropertyFileReadException pfre = (PropertyFileReadException) ex;
 				out.err("error reading file '" + pfre.getFileName() + "' system file '" +
 						pfre.getAttemptedSystemFileName() + "' using defaults;");
 				props = getDefaults();
 				out.err("using defaults " + props);
-			} else {
+			} catch (ClassCastException x) {
 				out.exception(p.getException());
 			}
 		} 

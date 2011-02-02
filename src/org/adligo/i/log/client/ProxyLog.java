@@ -335,8 +335,10 @@ public class ProxyLog  implements I_LogMutant, I_ProxyLog, I_Log {
 		if (getClass() == obj.getClass()) {
 			return equals2((I_Log) obj);
 		}
-		if (obj instanceof I_Log) {
+		try {
 			return equals2((I_Log) obj);
+		} catch (ClassCastException x) {
+			// do nothing;
 		}
 		return false;
 	}
