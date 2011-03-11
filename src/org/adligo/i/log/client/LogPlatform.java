@@ -96,7 +96,7 @@ public class LogPlatform implements I_Listener {
 			}
 		} 
 		synchronized (LogPlatform.class) {
-			I_Iterator it =  props.getIterator();
+			I_Iterator it =  props.getKeysIterator();
 			
 			removeCommentLines(it);
 			
@@ -132,11 +132,7 @@ public class LogPlatform implements I_Listener {
 		if (!isInitLevelsSet) {
 			if (debug) {
 				System.out.println("property file looked like...");
-				I_Iterator it = props.getIterator();
-				while (it.hasNext()) {
-					Object key = it.next();
-					System.out.println("" + key + "=" + value);
-				}
+				I_Iterator it = props.getKeysIterator();
 			}
 			String format = (String) props.get("format");
 			if (!StringUtils.isEmpty(format)) {

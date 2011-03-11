@@ -93,18 +93,17 @@ public class DefaultLogFactory implements I_LogFactory {
 	}
 	
 	private static void resetLevels(I_Map loggers, I_Map props) {
-		I_Iterator it = loggers.getIterator();
+		I_Iterator it = loggers.getValuesIterator();
 		if (LogPlatform.isDebug()) {
 			LogPlatform.log("LogFactory","resetLevels there are " + loggers.size() + " loggers ");
 		}
 		
 		while (it.hasNext()) {
-			Object key = it.next();
-			I_LogMutant log = (I_LogMutant) loggers.get(key);
+			I_LogMutant log = (I_LogMutant) it.next();
 			
 			log.setLogLevel(props);
 			if (LogPlatform.isDebug()) {
-				LogPlatform.log("LogFactory","Log " + key + " is now at level " + 
+				LogPlatform.log("LogFactory","Log " + log + " is now at level " + 
 						LogMessage.getLevelString(log.getLevel()));
 			}
 		}
