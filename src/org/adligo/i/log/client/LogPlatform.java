@@ -166,7 +166,8 @@ public class LogPlatform implements I_Listener {
 
 	/**
 	 * 
-	 * @param pLogConfignName
+	 * @param pFileName a relative url (on GWT)
+	 *    or a file from the filesystem or classpath
 	 * @param p the I_LogFactroy that you want to use to create Log instance
 	 *    in this new version all Log instances created by your custom factory
 	 *    will be called from ProxyLog->YourLog
@@ -180,10 +181,10 @@ public class LogPlatform implements I_Listener {
 	 *    				-> NetLog
 	 *    
 	 */
-	public synchronized static final void init(String pLogConfignName, I_LogFactory p) {
+	public synchronized static final void init(String pFileName, I_LogFactory p) {
 		if (!isInit) {
 			formatter = new SimpleFormatter();
-			logConfigName = pLogConfignName;
+			logConfigName = pFileName;
 			customFactory = p;
 			PropertyFactory.get(logConfigName, instance);
 			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
@@ -194,17 +195,25 @@ public class LogPlatform implements I_Listener {
 		}
 	}
 
-	public synchronized static final void resetLevels(String pLogConfignName) {
-		logConfigName = pLogConfignName;
-		PropertyFactory.get(pLogConfignName, instance);
+	/**
+	 * 
+	 * @param pFileName
+	 *    a relative url (on GWT)
+	 *    or a file from the filesystem or classpath
+	 */
+	public synchronized static final void resetLevels(String pFileName) {
+		logConfigName = pFileName;
+		PropertyFactory.get(pFileName, instance);
 	}
 	/**
 	 * 
-	 * @param pLogConfignName
+	 * @param pFileName
+	 *    a relative url (on GWT)
+	 *    or a file from the filesystem or classpath
 	 */
-	public static final void init(String pLogConfignName) {
+	public static final void init(String pFileName) {
 		checkInit();
-		logConfigName = pLogConfignName;
+		logConfigName = pFileName;
 		init();
 	}
 	
