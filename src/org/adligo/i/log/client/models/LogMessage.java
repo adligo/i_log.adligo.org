@@ -1,11 +1,11 @@
 package org.adligo.i.log.client.models;
 
 import org.adligo.i.log.client.I_LogDelegate;
-import org.adligo.i.log.client.LogFactory;
 import org.adligo.i.log.client.LogPlatform;
 import org.adligo.i.util.client.ClassUtils;
 import org.adligo.i.util.client.I_ThreadContainer;
 import org.adligo.i.util.client.I_ThreadPopulator;
+import org.adligo.i.util.client.ThrowableHelperFactory;
 
 
 public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
@@ -60,33 +60,9 @@ public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
 		this.windowId = windowId;
 	}
 	
-	public static String fillInStack(Throwable throwable) {
-		if (throwable != null) {
-			StringBuilder buf = new StringBuilder();
-			// Append stack trace if not null
-	        if(throwable != null) {
-	        	StackTraceElement [] trace = throwable.getStackTrace();
-	        	buf.append(" <");
-	            buf.append(throwable.toString());
-	            buf.append(">");
-
-	            buf.append("\n");
-	           
-	            
-	            for (int j = 0; j < trace.length; j++) {
-	            	buf.append("\t at ");
-	            	buf.append(trace[j].toString());
-	            	buf.append("\n");
-				}
-	           
-	            return buf.toString();
-	        }
-		}
-		return "";
-	}
 	public void fillInStack() {
 		if (!filledStackAsString) {
-			stackAsString = fillInStack(throwable);
+			stackAsString = ThrowableHelperFactory.getStackTraceAsString(throwable);
 			filledStackAsString = true;
 		}
 	}

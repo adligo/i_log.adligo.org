@@ -17,6 +17,7 @@ import org.adligo.i.util.client.PropertyFileReadException;
 import org.adligo.i.util.client.StringUtils;
 import org.adligo.i.util.client.SystemOutput;
 import org.adligo.i.util.client.ThreadPopulatorFactory;
+import org.adligo.i.util.client.ThrowableHelperFactory;
 
 /**
  * this holds the properties which need to be used to init the 
@@ -122,7 +123,7 @@ public class LogPlatform implements I_Listener {
 								Exception ex =  new Exception("log_factory is null, because your code" +
 										" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
 										" with a valid instance of your logFactory " + logFactory + "!");
-								ex.fillInStackTrace();
+								ThrowableHelperFactory.fillInStackTrace(ex);
 								out.exception(ex);
 							}
 							break;

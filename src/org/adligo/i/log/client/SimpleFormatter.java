@@ -127,8 +127,7 @@ public class SimpleFormatter implements I_Formatter {
 								if (LogPlatform.isDebug()) {
 									LogPlatform.log("SimpleFormatter", "parsing " + sb.toString());
 								}
-								fi.setCategory_precision(
-										new Integer(sb.toString()).shortValue());
+								fi.setCategory_precision(Short.parseShort(sb.toString()));
 								sb = new StringBuffer();
 							} catch (Exception x) {
 								x.printStackTrace();

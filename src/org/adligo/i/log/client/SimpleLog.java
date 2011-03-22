@@ -26,6 +26,7 @@ import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.I_SystemOutput;
 import org.adligo.i.util.client.StringUtils;
 import org.adligo.i.util.client.SystemOutput;
+import org.adligo.i.util.client.ThrowableHelperFactory;
 
 /**
  * 
@@ -194,7 +195,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 	public static void createLogMessage(Object message, Throwable t, StringBuffer buf) {
 		// Append the message
         buf.append(String.valueOf(message));
-        buf.append(LogMessage.fillInStack(t));
+        buf.append(ThrowableHelperFactory.getStackTraceAsString(t));
 	}
 
 
