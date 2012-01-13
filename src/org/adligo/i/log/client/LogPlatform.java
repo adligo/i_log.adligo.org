@@ -121,7 +121,7 @@ public class LogPlatform implements I_Listener {
 								LogFactory.setLogFactoryInstance(fac);
 							} else {
 								Exception ex =  new Exception("log_factory is null, because your code" +
-										" needs to call LogPlatform.addLogFactoryClass(String name, I_LogFactory p)" +
+										" needs to call LogPlatform.init(String name, I_LogFactory p)" +
 										" with a valid instance of your logFactory " + logFactory + "!");
 								ThrowableHelperFactory.fillInStackTrace(ex);
 								out.exception(ex);
