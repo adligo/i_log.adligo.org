@@ -1,10 +1,8 @@
 package org.adligo.i.log.client;
 
 import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.log.client.models.LogMessageFactory;
 import org.adligo.i.util.client.ClassUtils;
-import org.adligo.i.util.client.I_Map;
-import org.adligo.i.util.client.StringUtils;
+import org.adligo.i.util.client.I_ImmutableMap;
 
 /**
  * this class simply sends a message out to the 
@@ -18,11 +16,11 @@ import org.adligo.i.util.client.StringUtils;
  */
 public class SingleDispatchLog extends SimpleLog implements Log {
 	
-	public SingleDispatchLog(Class clazz, I_Map props) {
+	public SingleDispatchLog(Class clazz, I_ImmutableMap props) {
 		this(ClassUtils.getClassName(clazz), props);
 	}
 	
-	public SingleDispatchLog(String clazz, I_Map props) {
+	public SingleDispatchLog(String clazz, I_ImmutableMap props) {
 		super(clazz, props);
 	}
 	
