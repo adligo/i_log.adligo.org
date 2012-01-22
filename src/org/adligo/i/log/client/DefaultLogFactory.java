@@ -4,6 +4,7 @@ import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.util.client.ArrayCollection;
 import org.adligo.i.util.client.HashCollection;
 import org.adligo.i.util.client.I_Collection;
+import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.MapFactory;
@@ -65,7 +66,7 @@ public class DefaultLogFactory implements I_LogFactory {
 		resetLevels(loggers, LogPlatform.getProps());
 	}
 	
-	public synchronized void setInitalLogLevels(I_Map props, I_LogFactory p) {
+	public synchronized void setInitalLogLevels(I_ImmutableMap props, I_LogFactory p) {
 		if (LogPlatform.isDebug()) {
 			LogPlatform.log("LogFactory", " setInitalLogLevels " + p);
 		}
@@ -92,7 +93,7 @@ public class DefaultLogFactory implements I_LogFactory {
 		}
 	}
 	
-	private static void resetLevels(I_Map loggers, I_Map props) {
+	private static void resetLevels(I_ImmutableMap loggers, I_ImmutableMap props) {
 		I_Iterator it = loggers.getValuesIterator();
 		if (LogPlatform.isDebug()) {
 			LogPlatform.log("LogFactory","resetLevels there are " + loggers.size() + " loggers ");

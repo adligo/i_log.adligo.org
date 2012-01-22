@@ -21,6 +21,7 @@ package org.adligo.i.log.client;
 
 import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.log.client.models.LogMessageFactory;
+import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.I_SystemOutput;
@@ -50,7 +51,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     // ---------------------------------------------------- Log Level Constants
 
 
-    private static String getStringProperty(I_Map props, String name) {
+    private static String getStringProperty(I_ImmutableMap props, String name) {
     	if (props == null) {
     		return null;
     	}
@@ -83,7 +84,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      *
      * @param name log name
      */
-    public SimpleLog(String name, I_Map props) {
+    public SimpleLog(String name, I_ImmutableMap props) {
 
         logName = name;
 
@@ -95,7 +96,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
         setLogLevel(props);
     }
 
-	public static short getLogLevel(I_Map props, String logName) {
+	public static short getLogLevel(I_ImmutableMap props, String logName) {
 		// Set log level from properties
         String lvl = getStringProperty(props, logName);
         
@@ -487,7 +488,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
         return -1;
     }
 
-    public void setLogLevel(I_Map p) {
+    public void setLogLevel(I_ImmutableMap p) {
     	this.setLevel(SimpleLog.getLogLevel(p, logName));
     }
     

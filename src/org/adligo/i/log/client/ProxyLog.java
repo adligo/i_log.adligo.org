@@ -3,6 +3,7 @@ package org.adligo.i.log.client;
 import org.adligo.i.util.client.ArrayIterator;
 import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.I_Collection;
+import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 
@@ -197,7 +198,7 @@ public class ProxyLog  implements I_LogMutant, I_ProxyLog, I_Log {
 		this.level = p;
 	}
 	
-	public void setLogLevel(I_Map props) {
+	public void setLogLevel(I_ImmutableMap props) {
 		// the delegates don't need a log level
 		this.level = SimpleLog.getLogLevel(props, logName);
 	}

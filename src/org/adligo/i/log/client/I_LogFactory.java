@@ -1,8 +1,7 @@
 package org.adligo.i.log.client;
 
-import org.adligo.i.log.client.models.I_LogMessage;
 import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.I_ImmutableMap;
 
 
 /**
@@ -63,5 +62,5 @@ public interface I_LogFactory {
 	 * @param props
 	 * @param p
 	 */
-	public void setInitalLogLevels(I_Map props, I_LogFactory p); 
+	public void setInitalLogLevels(I_ImmutableMap props, I_LogFactory p); 
 }

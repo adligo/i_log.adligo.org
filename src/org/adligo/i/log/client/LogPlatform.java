@@ -4,6 +4,7 @@ import org.adligo.i.util.client.CollectionFactory;
 import org.adligo.i.util.client.Event;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Event;
+import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Listener;
 import org.adligo.i.util.client.I_Map;
@@ -253,17 +254,16 @@ public class LogPlatform implements I_Listener {
 		}
 	}
 	
-
-	public synchronized static I_Map getProps() {
-		return props;
+	public synchronized static I_ImmutableMap getProps() {
+		I_ImmutableMap toRet = MapFactory.create(props);
+		return toRet;
 	}
 
-	
-	public static I_LogDispatcher getDispatcher() {
+	public synchronized static I_LogDispatcher getDispatcher() {
 		return dispatcher;
 	}
 
-	public static void setDispatcher(I_LogDispatcher dispatcher) {
+	public synchronized static void setDispatcher(I_LogDispatcher dispatcher) {
 		LogPlatform.dispatcher = dispatcher;
 	}
 	
