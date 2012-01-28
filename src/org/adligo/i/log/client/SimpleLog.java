@@ -23,7 +23,7 @@ import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.log.client.models.LogMessageFactory;
 import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
-import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.I_StringAppender;
 import org.adligo.i.util.client.I_SystemOutput;
 import org.adligo.i.util.client.StringUtils;
 import org.adligo.i.util.client.SystemOutput;
@@ -194,12 +194,24 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      * so i_log can't get a stacktrace when running in a actual browser
      */
 	public static void createLogMessage(Object message, Throwable t, StringBuffer buf) {
-		// Append the message
-        buf.append(String.valueOf(message));
-        buf.append(ThrowableHelperFactory.getStackTraceAsString(t));
+		createLogMessage("", message, t, new StringBufferAppender(buf), "");
 	}
 
-
+	/**
+	 * 
+	 * @param preText allows for tabs (\t) to indent messages
+	 * @param message
+	 * @param t
+	 * @param buf
+	 * @param lineFeed
+	 */
+	public static void createLogMessage(String preText, Object message, Throwable t, I_StringAppender buf, String lineFeed) {
+		// Append the message
+		buf.append(preText);
+		buf.append(String.valueOf(message));
+        buf.append(lineFeed);
+        buf.append(ThrowableHelperFactory.getStackTraceAsString(preText, t, lineFeed));
+	}
 
 
     /**
