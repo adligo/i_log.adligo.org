@@ -3,7 +3,9 @@ package org.adligo.i.log.client;
 import org.adligo.i.log.client.models.FormatItem;
 import org.adligo.i.log.client.models.I_LogMessage;
 import org.adligo.i.log.client.models.LogMessage;
+import org.adligo.i.util.client.AppenderFactory;
 import org.adligo.i.util.client.CollectionFactory;
+import org.adligo.i.util.client.I_Appender;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_Iterator;
 
@@ -18,7 +20,7 @@ public class SimpleFormatter implements I_Formatter {
 	}
 	
 	public String format(I_LogMessage message) {
-		StringBuffer sb = new StringBuffer();
+		I_Appender sb = AppenderFactory.create();
 		I_Iterator it = items.getIterator();
 		while (it.hasNext()) {
 			FormatItem item = (FormatItem) it.next();

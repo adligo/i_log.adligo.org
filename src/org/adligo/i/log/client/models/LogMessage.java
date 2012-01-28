@@ -2,7 +2,9 @@ package org.adligo.i.log.client.models;
 
 import org.adligo.i.log.client.I_LogDelegate;
 import org.adligo.i.log.client.LogPlatform;
+import org.adligo.i.util.client.AppenderFactory;
 import org.adligo.i.util.client.ClassUtils;
+import org.adligo.i.util.client.I_Appender;
 import org.adligo.i.util.client.I_ThreadContainer;
 import org.adligo.i.util.client.I_ThreadPopulator;
 import org.adligo.i.util.client.ThrowableHelperFactory;
@@ -111,12 +113,17 @@ public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		I_Appender sb = AppenderFactory.create();
 		sb.append(ClassUtils.getClassShortName(LogMessage.class) );
 		sb.append(" [name=");
 		sb.append(name);
 		sb.append("\n,message=\n");
-		sb.append(getMessage());
+		Object message = getMessage();
+		if (message == null) {
+			sb.append("null");
+		} else {
+			sb.append(getMessage().toString());
+		}
 		sb.append("\n,level=");
 		sb.append(getLevelString());
 		sb.append("] ");

@@ -1,7 +1,9 @@
 package org.adligo.i.log.client;
 
+import org.adligo.i.util.client.AppenderFactory;
 import org.adligo.i.util.client.ArrayIterator;
 import org.adligo.i.util.client.CollectionFactory;
+import org.adligo.i.util.client.I_Appender;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
@@ -362,7 +364,7 @@ public class ProxyLog  implements I_LogMutant, I_ProxyLog, I_Log {
 	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		I_Appender sb = AppenderFactory.create();
 		sb.append("ProxyLog [name=");
 		sb.append(logName);
 		sb.append(",delegates=");

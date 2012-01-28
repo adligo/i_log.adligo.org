@@ -1,8 +1,10 @@
 package org.adligo.i.log.client.models;
 
 import org.adligo.i.log.client.DeferredLog;
+import org.adligo.i.util.client.AppenderFactory;
 import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.client.I_Appender;
 import org.adligo.i.util.client.MapFactory;
 
 /**
@@ -15,7 +17,7 @@ import org.adligo.i.util.client.MapFactory;
  *
  */
 public class LogUrl {
-	StringBuffer sb = new StringBuffer();
+	I_Appender sb = AppenderFactory.create();
 	/**
 	 * the key to a value in the log url
 	 * which corresponds to the integers in SimpleLog like LOG_LEVEL_DEBUG

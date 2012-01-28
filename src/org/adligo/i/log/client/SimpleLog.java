@@ -21,9 +21,10 @@ package org.adligo.i.log.client;
 
 import org.adligo.i.log.client.models.LogMessage;
 import org.adligo.i.log.client.models.LogMessageFactory;
+import org.adligo.i.util.client.AppenderFactory;
 import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
-import org.adligo.i.util.client.I_StringAppender;
+import org.adligo.i.util.client.I_Appender;
 import org.adligo.i.util.client.I_SystemOutput;
 import org.adligo.i.util.client.StringUtils;
 import org.adligo.i.util.client.SystemOutput;
@@ -176,7 +177,7 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     
     public LogMessage createLogMessage(short type, Object message, Throwable t) {
     	 
-        StringBuffer buf = new StringBuffer();
+       	I_Appender buf = AppenderFactory.create();
         SimpleLog.createLogMessage(message, t, buf);
         
         LogMessage logMessage = LogMessageFactory.createMessage(buf.toString());
@@ -193,8 +194,9 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      * by always returning 0 StackTraceElements in the actual javascript
      * so i_log can't get a stacktrace when running in a actual browser
      */
-	public static void createLogMessage(Object message, Throwable t, StringBuffer buf) {
-		createLogMessage("", message, t, new StringBufferAppender(buf), "");
+	public static void createLogMessage(Object message, Throwable t, I_Appender p) {
+		
+		createLogMessage("\t", message, t, p, "\n");
 	}
 
 	/**
@@ -205,12 +207,12 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
 	 * @param buf
 	 * @param lineFeed
 	 */
-	public static void createLogMessage(String preText, Object message, Throwable t, I_StringAppender buf, String lineFeed) {
+	public static void createLogMessage(String preText, Object message, Throwable t, I_Appender buf, String lineFeed) {
 		// Append the message
 		buf.append(preText);
 		buf.append(String.valueOf(message));
         buf.append(lineFeed);
-        buf.append(ThrowableHelperFactory.getStackTraceAsString(preText, t, lineFeed));
+        ThrowableHelperFactory.getStackTraceAsString(preText, t, lineFeed, buf);
 	}
 
 

@@ -1,5 +1,8 @@
 package org.adligo.i.log.client.models;
 
+import org.adligo.i.util.client.AppenderFactory;
+import org.adligo.i.util.client.I_Appender;
+
 public class FormatItem {
 	/**
 	 * try to match log4j the original 
@@ -60,7 +63,7 @@ public class FormatItem {
 	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		I_Appender sb = AppenderFactory.create();
 		sb.append("FormatItem [type=");
 		sb.append(type);
 		sb.append(",string=");
