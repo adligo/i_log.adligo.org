@@ -2,6 +2,7 @@ package org.adligo.i.log.client.models;
 
 import org.adligo.i.log.client.I_LogDelegate;
 import org.adligo.i.log.client.LogPlatform;
+import org.adligo.i.log.client.SimpleFormatter;
 import org.adligo.i.util.client.AppenderFactory;
 import org.adligo.i.util.client.ClassUtils;
 import org.adligo.i.util.client.I_Appender;
@@ -64,7 +65,10 @@ public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
 	
 	public void fillInStack() {
 		if (!filledStackAsString) {
-			stackAsString = ThrowableHelperFactory.getStackTraceAsString(throwable);
+			I_Appender out = AppenderFactory.create();
+			ThrowableHelperFactory.appendStackTracesString(SimpleFormatter.DEFAULT_PRE_TEXT,
+					throwable, SimpleFormatter.DEFAULT_LINE_FEED, out);
+			stackAsString = out.toString();
 			filledStackAsString = true;
 		}
 	}
