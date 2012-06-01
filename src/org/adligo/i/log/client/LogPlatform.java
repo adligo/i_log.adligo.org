@@ -204,6 +204,7 @@ public class LogPlatform implements I_Listener {
 	 *    or a file from the filesystem or classpath
 	 */
 	public synchronized static final void resetLevels(String pFileName) {
+		out.out("Reading in log file " + pFileName);
 		logConfigName = pFileName;
 		PropertyFactory.get(pFileName, instance);
 	}
