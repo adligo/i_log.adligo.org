@@ -51,9 +51,9 @@ public class LogFactory  {
 		if (instance == DEFAULT_FACTORY) {
 			instance = fac;
 			if (fac.isStaticInit()) {
-				I_Collection preInitLogs = DEFAULT_FACTORY.getPreInitLogs();
+				I_Collection preInitLogs = DEFAULT_FACTORY.memory.getDeferredLogsCollection();
 				instance.setInitalLogLevels(preInitLogs);
-				preInitLogs.clear();
+				DEFAULT_FACTORY.memory.clearDeferredLogs();
 				
 				I_Collection deferredMessages = DeferredLog.deferredMessages;
 				instance.sendPreInitMessages(deferredMessages);

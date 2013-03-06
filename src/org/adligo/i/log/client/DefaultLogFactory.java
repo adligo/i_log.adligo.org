@@ -1,21 +1,15 @@
 package org.adligo.i.log.client;
 
 import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.util.client.ArrayCollection;
-import org.adligo.i.util.client.HashCollection;
 import org.adligo.i.util.client.I_Collection;
 import org.adligo.i.util.client.I_ImmutableMap;
 import org.adligo.i.util.client.I_Iterator;
-import org.adligo.i.util.client.I_Map;
-import org.adligo.i.util.client.MapFactory;
 
 public class DefaultLogFactory implements I_LogFactory {
 	/**
 	 * collection of I_LogDelegates
 	 */
-	protected static HashCollection preInitLoggers = new HashCollection();
-	protected static volatile I_Map loggers;
-	protected static volatile boolean firstTime = true;
+	static final LogFactoryMemory memory = new LogFactoryMemory();
 	
 	
 	public I_LogDelegate getLog(Class clazz) {
@@ -37,23 +31,24 @@ public class DefaultLogFactory implements I_LogFactory {
 			LogPlatform.log("LogFactory", " getLog(" + clazz + ")");
 		}
 		I_LogDelegate toRet;
-		if (loggers == null) {
+		if ( !memory.isInit()) {
 			
-			I_LogDelegate current = (I_LogDelegate) preInitLoggers.get(new LogLookup(clazz));
+			DeferredLog current = memory.getDeferredLog(clazz);
 			if (LogPlatform.isDebug()) {
 				LogPlatform.log("LogFactory"," current is " + current);
 			}
 			if (current != null) {
 				toRet = current;
 			} else {
-				toRet = new DeferredLog(clazz);
-				preInitLoggers.add(toRet);
+				current = new DeferredLog(clazz);
+				toRet = current;
+				memory.addDeferredLog(current);
 			}
 		} else {
-			toRet = (I_LogDelegate) loggers.get(clazz);
+			toRet = memory.getLogger(clazz);
 			if (toRet == null) {
 				toRet = new SimpleLog(clazz, LogPlatform.getProps());
-				loggers.put(clazz, toRet);
+				memory.addLogger(clazz, toRet);
 			}
 		}
 		return toRet;
@@ -63,41 +58,44 @@ public class DefaultLogFactory implements I_LogFactory {
 		if (LogPlatform.isDebug()) {
 			LogPlatform.log("LogFactory", " resetLogLevels()");
 		}
-		resetLevels(loggers, LogPlatform.getProps());
+		resetLevels(LogPlatform.getProps());
 	}
 	
 	public synchronized void setInitalLogLevels(I_ImmutableMap props, I_LogFactory p) {
 		if (LogPlatform.isDebug()) {
 			LogPlatform.log("LogFactory", " setInitalLogLevels " + p);
 		}
-		if (loggers == null) {
-			firstTime = true;
-			loggers = MapFactory.create();
-			I_Iterator it = preInitLoggers.getIterator();
+		if (!memory.isInit()) {
+			memory.init();
+			I_Iterator it = memory.getDeferredLogs();
 			while (it.hasNext()) {
-				DeferredLog log = (DeferredLog) it.next();
-				I_LogDelegate delegate = null;
-				if (p != null) {
-					delegate = p.getLog(log.getLogName());
-				} else {
-					String clazz = log.getLogName();
-					delegate = new SimpleLog(clazz, props);
+				Object objLog = it.next();
+				try {
+					DeferredLog log = (DeferredLog) objLog;
+					I_LogDelegate delegate = null;
+					if (p != null) {
+						delegate = p.getLog(log.getLogName());
+					} else {
+						String clazz = log.getLogName();
+						delegate = new SimpleLog(clazz, props);
+					}
+					log.addDelegate(delegate);
+					memory.addLogger(log.getLogName(), log);
+				} catch (ClassCastException x) {
+					System.out.println("objLog is a " + objLog);
+					x.printStackTrace();
 				}
-				log.addDelegate(delegate);
-				loggers.put(log.getLogName(), log);
 			}
 		}
-		resetLevels(loggers, LogPlatform.getProps());
-		if (firstTime) {
+		resetLevels(LogPlatform.getProps());
+		if (memory.isfirstCallToSetInitalLogLevels()) {
 			sendPreInitMessages(DeferredLog.deferredMessages);
 		}
+		memory.firstCallToSetInitalLogLevelsFinished();
 	}
 	
-	private static void resetLevels(I_ImmutableMap loggers, I_ImmutableMap props) {
-		I_Iterator it = loggers.getValuesIterator();
-		if (LogPlatform.isDebug()) {
-			LogPlatform.log("LogFactory","resetLevels there are " + loggers.size() + " loggers ");
-		}
+	private static void resetLevels(I_ImmutableMap props) {
+		I_Iterator it = memory.getLogs();
 		
 		while (it.hasNext()) {
 			I_LogMutant log = (I_LogMutant) it.next();
@@ -124,7 +122,8 @@ public class DefaultLogFactory implements I_LogFactory {
 		while (it.hasNext()) {
 			LogMessage message = (LogMessage) it.next();
 			if (message != null) {
-				DeferredLog el_log = (DeferredLog) loggers.get(message.getName());
+				String logName = message.getName();
+				DeferredLog el_log = (DeferredLog) memory.getDeferredLog(logName);
 				if (el_log != null) {
 					el_log.consumeMessage(message);
 					if (LogPlatform.isDebug()) {
@@ -136,12 +135,8 @@ public class DefaultLogFactory implements I_LogFactory {
 			}
 		}
 		iLogMessages.clear();
-		firstTime = false;
 	}	
-	
-	public HashCollection getPreInitLogs() {
-		return preInitLoggers;
-	}
+
 
 	public boolean isStaticInit() {
 		return true;
