@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="jar" name="jme-i_log">
+<project basedir="." default="jme_jar" name="jme-i_log">
     <import file="${user.home}/conf/adligo/jme-build.xml"/>
 </project>
