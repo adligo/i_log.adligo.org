@@ -1,8 +1,9 @@
 .gwt-cache/
+*.swp
 classes/
 www/
 .eclipseme.tmp/
 i_log.jar
 tmp*/
 i_log.jad
-e_classes/
+classes_e/
