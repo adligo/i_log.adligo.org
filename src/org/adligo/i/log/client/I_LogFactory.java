@@ -24,6 +24,11 @@ public interface I_LogFactory {
 	public I_LogDelegate getLog(String name);
 	
 	/**
+	 * the name (usually classname) of this log factory
+	 * @return
+	 */
+	public String getName();
+	/**
 	 * re read config file on disk
 	 */
 	public void resetLogLevels();

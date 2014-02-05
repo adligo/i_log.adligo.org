@@ -141,5 +141,9 @@ public class DefaultLogFactory implements I_LogFactory {
 	public boolean isStaticInit() {
 		return true;
 	}
+
+	public String getName() {
+		return DefaultLogFactory.class.getName();
+	}
 	
 }

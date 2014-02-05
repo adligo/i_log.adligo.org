@@ -11,14 +11,14 @@ public class LogFactoryMemorySnapshot {
 	}
 	
 	public I_HashCollection getPreInitLoggers() {
-		return memory.preInitLoggers;
+		return memory.getPreInitLoggers();
 	}
 	
 	public I_Map getLoggers() {
-		return memory.loggers;
+		return memory.getLoggers();
 	}
 	
 	public boolean isFirstCallToSetInitalLogLevels() {
-		return memory.firstCallToSetInitalLogLevels;
+		return memory.isfirstCallToSetInitalLogLevels();
 	}
 }

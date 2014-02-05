@@ -13,25 +13,35 @@ import org.adligo.i.util.client.I_Map;
  */
 public class LogFactory  {
 	private static final DefaultLogFactory DEFAULT_FACTORY = new DefaultLogFactory();
-	private static I_LogFactory instance = DEFAULT_FACTORY;
+	private static I_LogFactory INSTANCE = DEFAULT_FACTORY;
+	private String name;
 	
-	protected LogFactory() {}
+	protected LogFactory() {
+		name = "non-default";
+	}
 	
+	protected LogFactory(String p) {
+		name = p;
+	}
+	
+	public String getName() {
+		return name;
+	}
 	
 	public static synchronized Log getLog(Class clazz) {
-		return (Log) instance.getLog(clazz);
+		return (Log) INSTANCE.getLog(clazz);
 	}
 	
 	public static synchronized Log getLog(String clazz) {
-		return (Log) instance.getLog(clazz);
+		return (Log) INSTANCE.getLog(clazz);
 	}
 	
 	protected static synchronized I_LogFactory getLogFactoryInstance() {
-		return instance;
+		return INSTANCE;
 	}
 	
 	protected static boolean hasCustomFactory() {
-		return !(instance == DEFAULT_FACTORY);
+		return !(INSTANCE == DEFAULT_FACTORY);
 	}
 	/**
 	 * should only be used for static factory
@@ -48,15 +58,15 @@ public class LogFactory  {
 			// do nothing
 			return;
 		}
-		if (instance == DEFAULT_FACTORY) {
-			instance = fac;
+		if (INSTANCE == DEFAULT_FACTORY) {
+			INSTANCE = fac;
 			if (fac.isStaticInit()) {
 				I_Collection preInitLogs = DEFAULT_FACTORY.memory.getDeferredLogsCollection();
-				instance.setInitalLogLevels(preInitLogs);
+				INSTANCE.setInitalLogLevels(preInitLogs);
 				DEFAULT_FACTORY.memory.clearDeferredLogs();
 				
 				I_Collection deferredMessages = DeferredLog.deferredMessages;
-				instance.sendPreInitMessages(deferredMessages);
+				INSTANCE.sendPreInitMessages(deferredMessages);
 				deferredMessages.clear();
 			}
 		} else {
@@ -67,19 +77,19 @@ public class LogFactory  {
 	}
 	
 	protected static synchronized void resetLogLevels() {
-		instance.resetLogLevels();
+		INSTANCE.resetLogLevels();
 	}
 	
 	protected static synchronized void setInitalLogLevels(I_Map props, I_LogFactory p) {
-		instance.setInitalLogLevels(props, p);
+		INSTANCE.setInitalLogLevels(props, p);
 	}
 
 
 	public static I_LogFactory getInstance() {
-		return instance;
+		return INSTANCE;
 	}
 	
 	protected static void clearLogFactoryInstance() {
-		instance= DEFAULT_FACTORY;
+		INSTANCE= DEFAULT_FACTORY;
 	}
 }

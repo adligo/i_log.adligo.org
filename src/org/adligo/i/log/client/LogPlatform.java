@@ -62,7 +62,7 @@ public class LogPlatform implements I_Listener {
 	public static final String LOG_FACTORY = "log_factory";
 	
 	
-	protected static final LogPlatform instance = new LogPlatform();
+	protected static final LogPlatform INSTANCE = new LogPlatform();
 	private static String logConfigName = null;
 	private static boolean debug = false;
 	private static boolean trace = false;
@@ -188,7 +188,7 @@ public class LogPlatform implements I_Listener {
 			formatter = new SimpleFormatter();
 			logConfigName = pFileName;
 			customFactory = p;
-			PropertyFactory.get(logConfigName, instance);
+			PropertyFactory.get(logConfigName, INSTANCE);
 			threadPopulator = ThreadPopulatorFactory.getThreadPopulator();
 			//wait for file return event to set the LogFactory
 			isInit = true;
@@ -206,7 +206,7 @@ public class LogPlatform implements I_Listener {
 	public synchronized static final void resetLevels(String pFileName) {
 		out.out("Reading in log file " + pFileName);
 		logConfigName = pFileName;
-		PropertyFactory.get(pFileName, instance);
+		PropertyFactory.get(pFileName, INSTANCE);
 	}
 	/**
 	 * 
@@ -274,13 +274,13 @@ public class LogPlatform implements I_Listener {
 	 * this rereads the property file and sets all the log levels to match with it
 	 */
 	public synchronized static final void reloadConfig() {
-		PropertyFactory.get(logConfigName, instance);
+		PropertyFactory.get(logConfigName, INSTANCE);
 		//onEvent is called next through the callback
 	}
 	
 	public synchronized static final void loadConfig(String fileName) {
 		logConfigName = fileName;
-		PropertyFactory.get(logConfigName, instance);
+		PropertyFactory.get(logConfigName, INSTANCE);
 		//onEvent is called next through the callback
 	}
 
@@ -346,5 +346,8 @@ public class LogPlatform implements I_Listener {
 		map.put("defaultlog", "INFO");
 		map.put("gwt_loggers", "simple");
 		return map;
+	}
+	public static LogFactoryMemorySnapshot getDefaultLogFactoryMemorySnapshot() {
+		return DefaultLogFactory.memory.getSnapshot();
 	}
 }

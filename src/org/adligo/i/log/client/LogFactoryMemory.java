@@ -16,37 +16,40 @@ public class LogFactoryMemory {
 	 * note due to initialization issues (chicken vs egg) with the MapFactory
 	 * this is a Collection that I wrote
 	 */
-	 volatile SynchronizedHashCollection preInitLoggers = new SynchronizedHashCollection(new HashCollection());
+	 private volatile SynchronizedHashCollection preInitLoggers = new SynchronizedHashCollection(new HashCollection());
 	 /**
 	  * the loggers known by the system
 	  * may swap out if someone reloads the logging configuration
 	  * at runtime (ie your servers buggy so lets just turn on the logging
 	  * without rebooting it).
 	  */
-	 volatile I_Map loggers;
+	 private volatile I_Map loggers;
 	 /**
 	  * if this is the first initialization of the levels
 	  * important because the log messages that were sent 
 	  * before the log platform was initialized should be flushed
 	  */
-	 volatile boolean firstCallToSetInitalLogLevels = true;
+	 private volatile boolean firstCallToSetInitalLogLevels = true;
 	
 	 public LogFactoryMemory() {}
 	 
 	public LogFactoryMemory(LogFactoryMemory other) {
 		HashCollection copy = new HashCollection();
-		I_Iterator it =  preInitLoggers.getIterator();
+		I_Iterator it =  other.getPreInitLoggers().getIterator();
 		while (it.hasNext()) {
 			copy.add(it.next());
 		}
 		preInitLoggers = new SynchronizedHashCollection(copy);
-		I_Map copyMap = MapFactory.create();
-		I_Iterator keys = loggers.getKeysIterator();
-		I_Iterator values = loggers.getKeysIterator();
-		while (keys.hasNext()) {
-			copyMap.put(keys.next(), values.next());
+		I_Map otherLoggers = other.getLoggers();
+		if (otherLoggers != null) {
+			I_Map copyMap = MapFactory.create();
+			I_Iterator keys = otherLoggers.getKeysIterator();
+			I_Iterator values = otherLoggers.getKeysIterator();
+			while (keys.hasNext()) {
+				copyMap.put(keys.next(), values.next());
+			}
+			loggers = copyMap;
 		}
-		
 		firstCallToSetInitalLogLevels = other.firstCallToSetInitalLogLevels;
 	}
 	void firstCallToSetInitalLogLevelsFinished() {
@@ -97,6 +100,7 @@ public class LogFactoryMemory {
 		return toRet;
 	}
 	
+	
 	void clearDeferredLogs() {
 		preInitLoggers.clear();
 	}
@@ -105,7 +109,15 @@ public class LogFactoryMemory {
 		return loggers.getValuesIterator();
 	}
 	
+	I_Map getLoggers() {
+		return loggers;
+	}
+	
 	public LogFactoryMemorySnapshot getSnapshot() {
 		return new LogFactoryMemorySnapshot(new LogFactoryMemory(this));
+	}
+	
+	SynchronizedHashCollection getPreInitLoggers() {
+		return preInitLoggers;
 	}
 }
