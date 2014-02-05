@@ -9,7 +9,7 @@ public class DefaultLogFactory implements I_LogFactory {
 	/**
 	 * collection of I_LogDelegates
 	 */
-	static final LogFactoryMemory memory = new LogFactoryMemory();
+	protected static final LogFactoryMemory memory = new LogFactoryMemory();
 	
 	
 	public I_LogDelegate getLog(Class clazz) {

@@ -1,6 +1,5 @@
 package org.adligo.i.log.client;
 
-import org.adligo.i.util.client.I_Iterator;
 
 public interface I_LogDelegate extends Log {
 	/** "Trace" level logging. */

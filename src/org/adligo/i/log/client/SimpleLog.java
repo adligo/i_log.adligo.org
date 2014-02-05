@@ -45,40 +45,14 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      * redirect output for testing
      */
     static protected I_SystemOutput out = SystemOutput.INSTANCE;
-
-
-
-
-    // ---------------------------------------------------- Log Level Constants
-
-
-    private static String getStringProperty(I_ImmutableMap props, String name) {
-    	if (props == null) {
-    		return null;
-    	}
-
-    	String toRet = (String) props.get(name);
-    	if (LogPlatform.isDebug()) {
-			LogPlatform.log("SimpleLog", "getStringProperty(" + name + ") returns " + toRet);
-		}
-        return toRet;
-    }
-
-
-
-    // ------------------------------------------------------------- Attributes
-
     /** The name of this simple log instance */
-    protected String logName = null;
+    protected final String logName;
     /** The current log level */
-    protected short currentLogLevel;
-    /** The short name of this simple log instance */
-    protected String shortLogName = null;
+    protected volatile short currentLogLevel;
     
     private boolean enabled = true;
 
 
-    // ------------------------------------------------------------ Constructor
 
     /**
      * Construct a simple log with given name.
@@ -95,6 +69,24 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
         setLevel(I_LogDelegate.LOG_LEVEL_INFO);
 
         setLogLevel(props);
+    }
+    
+
+
+
+    // ---------------------------------------------------- Log Level Constants
+
+
+    private static String getStringProperty(I_ImmutableMap props, String name) {
+    	if (props == null) {
+    		return null;
+    	}
+
+    	String toRet = (String) props.get(name);
+    	if (LogPlatform.isDebug()) {
+			LogPlatform.log("SimpleLog", "getStringProperty(" + name + ") returns " + toRet);
+		}
+        return toRet;
     }
 
 	public static short getLogLevel(I_ImmutableMap props, String logName) {

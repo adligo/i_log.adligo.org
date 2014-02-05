@@ -5,16 +5,50 @@ import org.adligo.i.util.client.HashCollection;
 import org.adligo.i.util.client.I_Iterator;
 import org.adligo.i.util.client.I_Map;
 import org.adligo.i.util.client.MapFactory;
+import org.adligo.i.util.client.SynchronizedHashCollection;
 
 public class LogFactoryMemory {
 	/**
-	 * note due to initalization issues (chicken vs egg) with the MapFactory
+	 * preInitLoggers are loggers that were created before the 
+	 * log platform was initialized and will be kept because
+	 * they have importance someone may have called log before the LogPlatform is initialized.
+	 * 
+	 * note due to initialization issues (chicken vs egg) with the MapFactory
 	 * this is a Collection that I wrote
 	 */
-	volatile HashCollection preInitLoggers = new HashCollection();
-	volatile I_Map loggers;
-	volatile boolean firstCallToSetInitalLogLevels = true;
+	 volatile SynchronizedHashCollection preInitLoggers = new SynchronizedHashCollection(new HashCollection());
+	 /**
+	  * the loggers known by the system
+	  * may swap out if someone reloads the logging configuration
+	  * at runtime (ie your servers buggy so lets just turn on the logging
+	  * without rebooting it).
+	  */
+	 volatile I_Map loggers;
+	 /**
+	  * if this is the first initialization of the levels
+	  * important because the log messages that were sent 
+	  * before the log platform was initialized should be flushed
+	  */
+	 volatile boolean firstCallToSetInitalLogLevels = true;
 	
+	 public LogFactoryMemory() {}
+	 
+	public LogFactoryMemory(LogFactoryMemory other) {
+		HashCollection copy = new HashCollection();
+		I_Iterator it =  preInitLoggers.getIterator();
+		while (it.hasNext()) {
+			copy.add(it.next());
+		}
+		preInitLoggers = new SynchronizedHashCollection(copy);
+		I_Map copyMap = MapFactory.create();
+		I_Iterator keys = loggers.getKeysIterator();
+		I_Iterator values = loggers.getKeysIterator();
+		while (keys.hasNext()) {
+			copyMap.put(keys.next(), values.next());
+		}
+		
+		firstCallToSetInitalLogLevels = other.firstCallToSetInitalLogLevels;
+	}
 	void firstCallToSetInitalLogLevelsFinished() {
 		firstCallToSetInitalLogLevels = false;
 	}
@@ -69,5 +103,9 @@ public class LogFactoryMemory {
 	
 	I_Iterator getLogs() {
 		return loggers.getValuesIterator();
+	}
+	
+	public LogFactoryMemorySnapshot getSnapshot() {
+		return new LogFactoryMemorySnapshot(new LogFactoryMemory(this));
 	}
 }
