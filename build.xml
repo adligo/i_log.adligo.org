@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="gwt_jar" name="i_log">
-	<import file="${user.home}/conf/adligo/builds/gwt-build.xml"/>
+<project basedir="." default="jar" name="i_log">
+	<import file="${user.home}/conf/adligo/builds/jse-build.xml"/>
 </project>
