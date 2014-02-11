@@ -47,11 +47,22 @@ public class DefaultLogFactory implements I_LogFactory {
 		} else {
 			toRet = memory.getLogger(clazz);
 			if (toRet == null) {
-				toRet = new SimpleLog(clazz, LogPlatform.getProps());
+				toRet = createPostInitLogger(clazz);
 				memory.addLogger(clazz, toRet);
 			}
 		}
 		return toRet;
+	}
+	
+	/**
+	 * this allows subclasses to override which 
+	 * log is delivered (ie see ant_log.adligo.org project)
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	protected I_LogDelegate createPostInitLogger(String clazz) {
+		return new SimpleLog(clazz, LogPlatform.getProps());
 	}
 	
 	public synchronized void resetLogLevels() {

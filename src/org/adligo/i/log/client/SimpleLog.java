@@ -163,8 +163,18 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
     public void log(short type, Object message, Throwable t) {
     	LogMessage logMessage = createLogMessage(type, message, t);
     	
-        I_Formatter fmt = LogPlatform.getFormatter();
-        out.out(fmt.format(logMessage));
+    	I_Formatter fmt = LogPlatform.getFormatter();
+    	String p = fmt.format(logMessage);
+        print(p);
+    }
+    
+    /**
+     * subclasses may direct output to more than one output
+     * ie see AntLog
+     * @param message
+     */
+    protected void print(String p) {
+    	out.out(p);
     }
     
     public LogMessage createLogMessage(short type, Object message, Throwable t) {
