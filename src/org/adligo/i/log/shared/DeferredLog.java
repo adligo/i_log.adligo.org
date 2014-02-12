@@ -1,9 +1,9 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.log.client.models.LogMessageFactory;
-import org.adligo.i.util.client.ArrayCollection;
-import org.adligo.i.util.client.I_Collection;
+import org.adligo.i.log.shared.models.LogMessage;
+import org.adligo.i.log.shared.models.LogMessageFactory;
+import org.adligo.i.util.shared.ArrayCollection;
+import org.adligo.i.util.shared.I_Collection;
 
 public class DeferredLog extends ProxyLog {
 	/**

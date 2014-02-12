@@ -1,8 +1,8 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.util.client.ClassUtils;
-import org.adligo.i.util.client.I_ImmutableMap;
+import org.adligo.i.log.shared.models.LogMessage;
+import org.adligo.i.util.shared.ClassUtils;
+import org.adligo.i.util.shared.I_ImmutableMap;
 
 /**
  * this class simply sends a message out to the 

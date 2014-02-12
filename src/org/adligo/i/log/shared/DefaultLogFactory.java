@@ -1,9 +1,9 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_ImmutableMap;
-import org.adligo.i.util.client.I_Iterator;
+import org.adligo.i.log.shared.models.LogMessage;
+import org.adligo.i.util.shared.I_Collection;
+import org.adligo.i.util.shared.I_ImmutableMap;
+import org.adligo.i.util.shared.I_Iterator;
 
 public class DefaultLogFactory implements I_LogFactory {
 	/**

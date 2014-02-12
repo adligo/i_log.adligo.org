@@ -1,12 +1,12 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.AppenderFactory;
-import org.adligo.i.util.client.ArrayIterator;
-import org.adligo.i.util.client.CollectionFactory;
-import org.adligo.i.util.client.I_Appender;
-import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_ImmutableMap;
-import org.adligo.i.util.client.I_Iterator;
+import org.adligo.i.util.shared.AppenderFactory;
+import org.adligo.i.util.shared.ArrayIterator;
+import org.adligo.i.util.shared.CollectionFactory;
+import org.adligo.i.util.shared.I_Appender;
+import org.adligo.i.util.shared.I_Collection;
+import org.adligo.i.util.shared.I_ImmutableMap;
+import org.adligo.i.util.shared.I_Iterator;
 
 /**
  * this class tracks all logging

@@ -1,6 +1,6 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.I_Iterator;
+import org.adligo.i.util.shared.I_Iterator;
 
 public interface I_ProxyLog extends I_LogDelegate {
     

@@ -1,6 +1,6 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.log.client.models.I_LogMessage;
+import org.adligo.i.log.shared.models.I_LogMessage;
 
 public interface I_Formatter {
 	

@@ -1,7 +1,7 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_ImmutableMap;
+import org.adligo.i.util.shared.I_Collection;
+import org.adligo.i.util.shared.I_ImmutableMap;
 
 
 /**

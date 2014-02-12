@@ -1,12 +1,12 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.log.client.models.FormatItem;
-import org.adligo.i.log.client.models.I_LogMessage;
-import org.adligo.i.util.client.AppenderFactory;
-import org.adligo.i.util.client.CollectionFactory;
-import org.adligo.i.util.client.I_Appender;
-import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_Iterator;
+import org.adligo.i.log.shared.models.FormatItem;
+import org.adligo.i.log.shared.models.I_LogMessage;
+import org.adligo.i.util.shared.AppenderFactory;
+import org.adligo.i.util.shared.CollectionFactory;
+import org.adligo.i.util.shared.I_Appender;
+import org.adligo.i.util.shared.I_Collection;
+import org.adligo.i.util.shared.I_Iterator;
 
 public class SimpleFormatter implements I_Formatter {
 	public static final String DEFAULT_PRE_TEXT = "  ";

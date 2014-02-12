@@ -1,7 +1,7 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.I_HashCollection;
-import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.shared.I_HashCollection;
+import org.adligo.i.util.shared.I_Map;
 
 public class LogFactoryMemorySnapshot {
 	private LogFactoryMemory memory;

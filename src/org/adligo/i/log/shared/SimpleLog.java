@@ -16,19 +16,19 @@
  */ 
 
 
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
 
-import org.adligo.i.log.client.models.LogMessage;
-import org.adligo.i.log.client.models.LogMessageFactory;
-import org.adligo.i.util.client.AppenderFactory;
-import org.adligo.i.util.client.I_ImmutableMap;
-import org.adligo.i.util.client.I_Iterator;
-import org.adligo.i.util.client.I_Appender;
-import org.adligo.i.util.client.I_SystemOutput;
-import org.adligo.i.util.client.StringUtils;
-import org.adligo.i.util.client.SystemOutput;
-import org.adligo.i.util.client.ThrowableHelperFactory;
+import org.adligo.i.log.shared.models.LogMessage;
+import org.adligo.i.log.shared.models.LogMessageFactory;
+import org.adligo.i.util.shared.AppenderFactory;
+import org.adligo.i.util.shared.I_Appender;
+import org.adligo.i.util.shared.I_ImmutableMap;
+import org.adligo.i.util.shared.I_Iterator;
+import org.adligo.i.util.shared.I_SystemOutput;
+import org.adligo.i.util.shared.StringUtils;
+import org.adligo.i.util.shared.SystemOutput;
+import org.adligo.i.util.shared.ThrowableHelperFactory;
 
 /**
  * 

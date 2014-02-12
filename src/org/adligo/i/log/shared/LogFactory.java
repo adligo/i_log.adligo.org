@@ -1,7 +1,7 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.I_Collection;
-import org.adligo.i.util.client.I_Map;
+import org.adligo.i.util.shared.I_Collection;
+import org.adligo.i.util.shared.I_Map;
 
 /**
  * a ultra simple log factory for CLDC 2.0 usage

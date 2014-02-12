@@ -1,4 +1,4 @@
-package org.adligo.i.log.client.models;
+package org.adligo.i.log.shared.models;
 
 public interface I_LogMessage {
 	public short getLevel();

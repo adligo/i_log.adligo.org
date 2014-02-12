@@ -1,4 +1,4 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
 public class LogLookup implements I_Log {
 	private String logName = "";

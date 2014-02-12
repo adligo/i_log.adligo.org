@@ -1,14 +1,14 @@
-package org.adligo.i.log.client.models;
+package org.adligo.i.log.shared.models;
 
-import org.adligo.i.log.client.I_LogDelegate;
-import org.adligo.i.log.client.LogPlatform;
-import org.adligo.i.log.client.SimpleFormatter;
-import org.adligo.i.util.client.AppenderFactory;
-import org.adligo.i.util.client.ClassUtils;
-import org.adligo.i.util.client.I_Appender;
-import org.adligo.i.util.client.I_ThreadContainer;
-import org.adligo.i.util.client.I_ThreadPopulator;
-import org.adligo.i.util.client.ThrowableHelperFactory;
+import org.adligo.i.log.shared.I_LogDelegate;
+import org.adligo.i.log.shared.LogPlatform;
+import org.adligo.i.log.shared.SimpleFormatter;
+import org.adligo.i.util.shared.AppenderFactory;
+import org.adligo.i.util.shared.ClassUtils;
+import org.adligo.i.util.shared.I_Appender;
+import org.adligo.i.util.shared.I_ThreadContainer;
+import org.adligo.i.util.shared.I_ThreadPopulator;
+import org.adligo.i.util.shared.ThrowableHelperFactory;
 
 
 public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {

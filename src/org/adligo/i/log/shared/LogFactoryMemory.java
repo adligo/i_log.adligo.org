@@ -1,11 +1,11 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.ArrayCollection;
-import org.adligo.i.util.client.HashCollection;
-import org.adligo.i.util.client.I_Iterator;
-import org.adligo.i.util.client.I_Map;
-import org.adligo.i.util.client.MapFactory;
-import org.adligo.i.util.client.SynchronizedHashCollection;
+import org.adligo.i.util.shared.ArrayCollection;
+import org.adligo.i.util.shared.HashCollection;
+import org.adligo.i.util.shared.I_Iterator;
+import org.adligo.i.util.shared.I_Map;
+import org.adligo.i.util.shared.MapFactory;
+import org.adligo.i.util.shared.SynchronizedHashCollection;
 
 public class LogFactoryMemory {
 	/**

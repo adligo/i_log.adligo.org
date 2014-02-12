@@ -1,6 +1,6 @@
-package org.adligo.i.log.client;
+package org.adligo.i.log.shared;
 
-import org.adligo.i.util.client.I_ImmutableMap;
+import org.adligo.i.util.shared.I_ImmutableMap;
 
 public interface I_LogMutant extends Log {
 	

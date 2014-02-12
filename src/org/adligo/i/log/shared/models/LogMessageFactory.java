@@ -1,6 +1,6 @@
-package org.adligo.i.log.client.models;
+package org.adligo.i.log.shared.models;
 
-import org.adligo.i.util.client.ClassUtils;
+import org.adligo.i.util.shared.ClassUtils;
 
 public class LogMessageFactory {
 
