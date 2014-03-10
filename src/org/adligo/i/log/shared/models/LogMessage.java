@@ -66,8 +66,9 @@ public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
 	public void fillInStack() {
 		if (!filledStackAsString) {
 			I_Appender out = AppenderFactory.create();
-			ThrowableHelperFactory.appendStackTracesString(SimpleFormatter.DEFAULT_PRE_TEXT,
-					throwable, SimpleFormatter.DEFAULT_LINE_FEED, out);
+			ThrowableHelperFactory.appendStackTracesString(
+					SimpleFormatter.DEFAULT_PRE_TEXT,
+					throwable, AppenderFactory.lineSeperator() , out);
 			stackAsString = out.toString();
 			filledStackAsString = true;
 		}
@@ -121,14 +122,17 @@ public abstract class LogMessage implements I_LogMessage, I_ThreadContainer {
 		sb.append(ClassUtils.getClassShortName(LogMessage.class) );
 		sb.append(" [name=");
 		sb.append(name);
-		sb.append("\n,message=\n");
+		sb.append(AppenderFactory.lineSeperator());
+		sb.append(",message=");
+		sb.append(AppenderFactory.lineSeperator());
 		Object message = getMessage();
 		if (message == null) {
 			sb.append("null");
 		} else {
 			sb.append(getMessage().toString());
 		}
-		sb.append("\n,level=");
+		sb.append(AppenderFactory.lineSeperator());
+		sb.append(",level=");
 		sb.append(getLevelString());
 		sb.append("] ");
 		sb.append(name);

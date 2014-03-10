@@ -1,6 +1,7 @@
 package org.adligo.i.log.shared;
 
 import org.adligo.i.log.shared.models.LogMessage;
+import org.adligo.i.util.shared.AppenderFactory;
 import org.adligo.i.util.shared.I_Collection;
 import org.adligo.i.util.shared.I_ImmutableMap;
 import org.adligo.i.util.shared.I_Iterator;
@@ -15,7 +16,8 @@ public class DefaultLogFactory implements I_LogFactory {
 	public I_LogDelegate getLog(Class clazz) {
 		if (clazz == null) {
 			throw new NullPointerException(
-					"LogFactory can't accept a null Class for \n" +
+					"LogFactory can't accept a null Class for " +
+					AppenderFactory.lineSeperator() +
 					" getLog(Class clazz)");
 		}
 		return getLogInternal(clazz.getName());
@@ -138,9 +140,11 @@ public class DefaultLogFactory implements I_LogFactory {
 				if (el_log != null) {
 					el_log.consumeMessage(message);
 					if (LogPlatform.isDebug()) {
-						LogPlatform.log("LogFactory"," consuming log message \n" + message + 
-								" el_log is at; \n" + LogMessage.getLevelString(el_log.getLevel()) +
-								"\n");
+						LogPlatform.log("LogFactory"," consuming log message " + 
+								AppenderFactory.lineSeperator() + message + 
+								" el_log is at; " + AppenderFactory.lineSeperator() +
+								LogMessage.getLevelString(el_log.getLevel()) +
+								AppenderFactory.lineSeperator());
 					}
 				}
 			}

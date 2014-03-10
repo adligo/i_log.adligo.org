@@ -198,7 +198,8 @@ public class SimpleLog implements I_LogMutant, I_LogDelegate {
      */
 	public static void createLogMessage(Object message, Throwable t, I_Appender p) {
 		
-		createLogMessage(SimpleFormatter.DEFAULT_PRE_TEXT, message, t, p, SimpleFormatter.DEFAULT_LINE_FEED);
+		createLogMessage(SimpleFormatter.DEFAULT_PRE_TEXT, message, t, p, 
+				AppenderFactory.lineSeperator());
 	}
 
 	/**

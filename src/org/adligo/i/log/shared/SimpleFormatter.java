@@ -10,7 +10,6 @@ import org.adligo.i.util.shared.I_Iterator;
 
 public class SimpleFormatter implements I_Formatter {
 	public static final String DEFAULT_PRE_TEXT = "  ";
-	public static final String DEFAULT_LINE_FEED = "\n";
 	public static final String DEFAULT_FORMAT_STRING = "[%p] %c{1} - %m";
 	
 	private String asString = "";
