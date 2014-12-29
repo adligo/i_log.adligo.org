@@ -7,6 +7,7 @@
     </tns:stages>
     <lns:dependencies>
     	<lns:library>jme</lns:library>
+    	<lns:library platform="GWT" >gwt</lns:library>
         <lns:project>i_util.adligo.org</lns:project>
     </lns:dependencies>
  </tns:fabricate_project>
