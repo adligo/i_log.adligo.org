@@ -1,5 +1,6 @@
 .gwt-cache/
 *.swp
+/build/
 classes/
 www/
 .eclipseme.tmp/
