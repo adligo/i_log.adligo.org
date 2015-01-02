@@ -3,7 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/i_util.adligo.org"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="JME_HOME/lib/cldc_1.1.jar"/>
-	<classpathentry kind="var" path="JME_HOME/lib/midp_2.1.jar"/>
 	<classpathentry kind="output" path="classes_e"/>
 </classpath>
