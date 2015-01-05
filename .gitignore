@@ -1,10 +1,10 @@
 .gwt-cache/
 *.swp
 /build/
-classes/
-www/
+/classes/
+/www/
 .eclipseme.tmp/
 i_log.jar
 tmp*/
 i_log.jad
-classes_e/
+/classes_e/
