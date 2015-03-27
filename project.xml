@@ -7,7 +7,7 @@
     	<cns:param key="platforms" value="jse,gwt"/>
    	</pns:attributes>
     <pns:dependencies>
-    	<lns:library>jme</lns:library>
+    	<lns:library platform="JME" >jme</lns:library>
     	<lns:library platform="GWT" >gwt</lns:library>
         <pns:project>i_util.adligo.org</pns:project>
     </pns:dependencies>
